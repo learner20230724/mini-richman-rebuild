@@ -1,0 +1,10 @@
+/original/
+/reference/
+/sources/
+/output/
+/release/
+/.playwright-cli/
+/node_modules/
+__pycache__/
+*.log
+*.tmp
