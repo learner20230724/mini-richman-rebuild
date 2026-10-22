@@ -10,12 +10,15 @@ RULES={
     'authorization-value':re.compile(r'(?i)authorization[\"\s:=]+(?:bearer|token)\s+[A-Za-z0-9_.-]{20,}'),
 }
 EXTENSIONS={'.js','.cjs','.py','.ps1','.cmd','.html','.json','.md','.xml','.svg','.txt','.yml','.yaml','.toml','.as',''}
-def scan(root,paths):
+def scan(root,paths,indexed=False):
     errors=[];count=0
     for path in paths:
         p=root/path
-        if not p.is_file() or p.suffix.lower() not in EXTENSIONS:continue
-        try:text=p.read_text('utf-8-sig')
+        if p.suffix.lower() not in EXTENSIONS:continue
+        if not indexed and not p.is_file():continue
+        try:
+            raw=subprocess.check_output(['git','show',':'+path.as_posix()],cwd=root) if indexed else p.read_bytes()
+            text=raw.decode('utf-8-sig')
         except UnicodeDecodeError:continue
         count+=1
         for name,rule in RULES.items():
@@ -29,5 +32,5 @@ if __name__=='__main__':
     else:
         paths=[p.relative_to(ROOT) for base in ['public','recovered','scripts','tests','data','docs'] for p in (ROOT/base).rglob('*') if p.is_file()]
         paths += [p.relative_to(ROOT) for p in ROOT.iterdir() if p.is_file()]
-    result=scan(ROOT,paths);print(json.dumps(result,ensure_ascii=False,indent=2))
+    result=scan(ROOT,paths,indexed=args.staged);print(json.dumps(result,ensure_ascii=False,indent=2))
     raise SystemExit(0 if result['pass'] else 1)

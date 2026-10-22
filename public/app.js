@@ -11,9 +11,10 @@
     await Promise.all(Object.entries(RichmanData.fonts).map(async([id,url])=>{
       const face=new FontFace('RichmanFont'+id,`url("${RichmanAssetData.fonts[id]||url}")`);await face.load();document.fonts.add(face);
     }));
-    game=new RichmanGame(RichmanData,RichmanScripts,{onError:fail,settings:new RichmanSettings(RichmanDefaults,RichmanOverrides)});
+    game=new RichmanGame(RichmanData,RichmanScripts,{onError:fail,settings:new RichmanSettings(RichmanDefaults,RichmanOverrides),extensions:RichmanExtensions});
     // Explicit development API, not a replacement for real-keyboard UI tests.
     window.richman=game;
+    RichmanExtensions.onReady?.(game);
     function draw(clip){
       if(!clip.alive||!clip.visible)return;
       ctx.save();ctx.transform(...clip.matrix);ctx.globalAlpha*=clip.color[3];

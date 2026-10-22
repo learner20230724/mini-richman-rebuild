@@ -152,3 +152,13 @@ test('invalid or unknown configuration is rejected',()=>{
   assert.throws(()=>new Settings(defaults,{numbers:{'rules.stepMilliseconds':0}}));
   assert.throws(()=>new Settings(defaults,{characters:{b0:{cash:1}}}));
 });
+test('named upgrade-star setting controls gate and consumption',()=>{
+  const g=game('b6','b1',{numbers:{'rules.upgradeStars':2}}),v=land(g,{owner:1,level:1});
+  g.keyDown(87);assert.equal(v.jibie[1],2);assert.equal(v.wuxing1,1);
+  land(g,{owner:1,level:2});assert.equal(v.tanchu,0);assert.equal(v.jibie[1],2);
+});
+test('named shop price setting controls affordability and actual debit',()=>{
+  const g=game('b6','b1',{numbers:{'rules.shopDiamondCash':321}}),v=g.root.vars;v.xianjin1=320;dialog(g,'chaoshi');g.keyDown(87);
+  assert.equal(v.xianjin1,320);assert.equal(g.root.named.chaoshi.named.kuang.vars.h,1);
+  v.xianjin1=500;g.keyDown(87);assert.equal(v.xianjin1,179);assert.equal(v.zuanshi1,4);
+});

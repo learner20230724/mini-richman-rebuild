@@ -163,6 +163,7 @@
       try{this.scripts[id].call(clip.proxy,clip.proxy);
         if(clip===this.root&&id===this.options.settings?.defaults.initializationScript)this.options.settings.initialized(this);
         this.options.settings?.afterScript(this,id,clip);
+        this.options.extensions?.afterScript?.(this,clip.proxy,id);
       }catch(error){
         this.errors.push({id,clip:clip.id,frame:clip.frame,time:this.now,message:String(error.stack||error)});
         this.options.onError?.(error,this.errors.at(-1));throw error;
@@ -173,6 +174,7 @@
     step(ms=20) {
       const end=this.now+ms;
       while(this.now+20<=end){
+        this.options.extensions?.beforeStep?.(this);
         this.now+=20;this.ticks++;
         const targets=this.walk();
         for(const clip of targets)if(clip.alive&&clip.events.enterFrame!==undefined)this.run(clip.events.enterFrame,clip);

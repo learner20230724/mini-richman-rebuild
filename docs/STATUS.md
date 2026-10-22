@@ -7,25 +7,35 @@ Updated 2026-10-23, Asia/Shanghai. **In development; not a complete-delivery cla
 - 45 recovered script blocks mapped into editable JavaScript; 259 display definitions.
 - Seven characters, 30 purchase tiles, whole-band purchases, buildings, taxes, items,
   traps, hospital branches, both casino variants, 15 fortune branches and bankruptcy.
-- 141 source-based controlled tests passed; all 45 script blocks were exercised.
+- 143 source-based controlled tests passed; all 45 script blocks were exercised.
   Script execution coverage is not branch coverage or independent Flash equivalence.
 - Three natural headless key-only games reached the winner scene with original
   values. Seeds 5976/42/123456: 463/465/456 rolls. The declared policy deliberately
   invests for P1 and declines investments for P2; no money/position/dice injection.
-- Initial menu and board were visually inspected in Edge. Windows PowerShell's
-  loopback server loaded the actual application without Node/Java/Flash.
+- 16 browser-flow checks and 6 additional screen checks passed in Edge: real menu
+  keys, whole-band purchase, controlled rent bankruptcy, shop, casino, fortune,
+  hospital, 600x450/1280x720/1920x1080 scaling, pointer mapping and fullscreen.
+  Explicit fixture setup is not described as natural browser-game completion.
+- Initial menu, custom menu, board, purchase popup and winner were visually
+  inspected. Windows PowerShell's loopback server loaded the actual application
+  without Node/Java/Flash.
 - Shared bitmap extraction removes repeated embedded images without redrawing them.
-- Human configuration and handwritten runtime files are outside generation outputs.
+- Actual regeneration preserved six handwritten/configuration files and produced
+  byte-identical generated outputs. Empty extension hooks preserve default rules.
+- Privacy scan passed; canary tests detect token/personal-path values and staged
+  secrets hidden by a subsequently cleaned working file. A pre-commit hook is included.
+- Code has actually been pushed to the public repository:
+  <https://github.com/learner20230724/mini-richman-rebuild>.
 
 ## Remaining acceptance / 待完成验收
 
-- Complete browser interaction matrix, fullscreen/scaled input, winner rendering.
-- Custom-value presentation: runtime payments and character stats are configurable,
-  but some static menu/map artwork still prints original values.
 - Independent original-runtime comparison; no full pixel-equivalence claim.
-- Regeneration preservation test, clean-clone rebuild and detached package testing.
-- Actual public repository push, immutable matching Release, final privacy audit
-  and storage figures. No publication or Release exists at this status checkpoint.
+- Clean-clone rebuild and detached package testing, matching Release and final sizes.
+
+Custom character values now update both the selection table and runtime state.
+Existing map cash labels show configured cash/ranges, and purchase confirmation
+shows actual configured cash/diamond costs. Original bitmap diamond icons remain
+default artwork; they are not a live numeric representation of custom prices.
 
 ## Source limitations / 原文件边界
 

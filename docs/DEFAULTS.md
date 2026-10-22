@@ -69,8 +69,9 @@ the original slowing-wheel algorithm, not a newly invented uniform choice.
 付款人付基础值，房主拿税后值；不擅自取整。房主住院时按原分支免费。护身符可以选择用或不用。
 
 Named numeric settings: `rules.houseCash`, `rules.rentHouse`, `rules.rentTower`.
-Default values are 200, 100, 200 respectively. Advanced upgrade/mine literals
-remain source-linked in `data/number-sources.json`.
+Default values are 200, 100, 200 respectively. `rules.upgradeStars` defaults to 1
+and changes both the upgrade eligibility check and actual star debit. Advanced
+mine literals remain source-linked in `data/number-sources.json`.
 
 ## Shop / 商店
 
@@ -86,6 +87,10 @@ the next confirmation while the selected item count equals five. One purchase or
 redemption ends the visit. The original four selection positions are retained.
 
 不是拿到第5张立即卖出；已有5张时再次确认才换钱。一次交易结束本次访问。
+
+Named settings: `rules.shopDiamondCash`, `rules.shopStarCash`,
+`rules.shopCharmCash`, `rules.shopMineCash` and the corresponding `...Redeem`
+keys. `rules.itemCap` changes the shared holding/redemption threshold (default 5).
 
 ## Casino / 赌场
 

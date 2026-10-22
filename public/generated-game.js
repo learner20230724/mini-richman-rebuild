@@ -583,7 +583,7 @@ function(__scope) { with (__scope) {
    if(Key.getCode() == _config.number("src.s15.l2.n1") && _root.shui == _config.number("src.s15.l2.n2"))
    {
       _root.wenben = _root.name1 + "：我有豪宅了";
-      _root.wuxing1--;
+      _root.wuxing1 -= _config.number("rules.upgradeStars");
       _root.f12--;
       _root.f13++;
       _root.jibie[_root.weizhi] = _config.number("src.s15.l8.n1");
@@ -627,7 +627,7 @@ function(__scope) { with (__scope) {
    else if(Key.getCode() == _config.number("src.s15.l46.n1") && _root.shui == _config.number("src.s15.l46.n2"))
    {
       _root.wenben = _root.name2 + "：我有加油站了";
-      _root.wuxing2--;
+      _root.wuxing2 -= _config.number("rules.upgradeStars");
       _root.f22--;
       _root.f23++;
       _root.jibie[_root.weizhi] = _config.number("src.s15.l52.n1");
@@ -985,22 +985,22 @@ stop();
 aa = random(_config.number("src.s21.l2.n1"));
 if(_root.shui == _config.number("src.s21.l3.n1"))
 {
-   if(aa == _config.number("src.s21.l5.n1") && _root.zuanshi1 < _config.number("src.s21.l5.n2"))
+   if(aa == _config.number("src.s21.l5.n1") && _root.zuanshi1 < _config.number("rules.itemCap"))
    {
       _root.zuanshi1++;
       _root.wenben = "获得一颗钻石";
    }
-   else if(aa == _config.number("src.s21.l10.n1") && _root.wuxing1 < _config.number("src.s21.l10.n2"))
+   else if(aa == _config.number("src.s21.l10.n1") && _root.wuxing1 < _config.number("rules.itemCap"))
    {
       _root.wuxing1++;
       _root.wenben = "获得一颗五星";
    }
-   else if(aa == _config.number("src.s21.l15.n1") && _root.yumao1 < _config.number("src.s21.l15.n2"))
+   else if(aa == _config.number("src.s21.l15.n1") && _root.yumao1 < _config.number("rules.itemCap"))
    {
       _root.yumao1++;
       _root.wenben = "获得一张护身符";
    }
-   else if(aa == _config.number("src.s21.l20.n1") && _root.dilei1 < _config.number("src.s21.l20.n2"))
+   else if(aa == _config.number("src.s21.l20.n1") && _root.dilei1 < _config.number("rules.itemCap"))
    {
       _root.dilei1++;
       _root.wenben = "获得一个地雷";
@@ -1094,22 +1094,22 @@ if(_root.shui == _config.number("src.s21.l3.n1"))
 }
 else if(_root.shui == _config.number("src.s21.l112.n1"))
 {
-   if(aa == _config.number("src.s21.l114.n1") && _root.zuanshi2 < _config.number("src.s21.l114.n2"))
+   if(aa == _config.number("src.s21.l114.n1") && _root.zuanshi2 < _config.number("rules.itemCap"))
    {
       _root.zuanshi2++;
       _root.wenben = "获得一颗钻石";
    }
-   else if(aa == _config.number("src.s21.l119.n1") && _root.wuxing2 < _config.number("src.s21.l119.n2"))
+   else if(aa == _config.number("src.s21.l119.n1") && _root.wuxing2 < _config.number("rules.itemCap"))
    {
       _root.wuxing2++;
       _root.wenben = "获得一颗五星";
    }
-   else if(aa == _config.number("src.s21.l124.n1") && _root.yumao2 < _config.number("src.s21.l124.n2"))
+   else if(aa == _config.number("src.s21.l124.n1") && _root.yumao2 < _config.number("rules.itemCap"))
    {
       _root.yumao2++;
       _root.wenben = "获得一张护身符";
    }
-   else if(aa == _config.number("src.s21.l129.n1") && _root.dilei2 < _config.number("src.s21.l129.n2"))
+   else if(aa == _config.number("src.s21.l129.n1") && _root.dilei2 < _config.number("rules.itemCap"))
    {
       _root.dilei2++;
       _root.wenben = "获得一个地雷";
@@ -1990,12 +1990,12 @@ function(__scope) { with (__scope) {
             _root.wenben = "谢谢惠顾";
             if(this._x == _config.number("src.s34.l24.n1"))
             {
-               if(_root.zuanshi1 == _config.number("src.s34.l26.n1"))
+               if(_root.zuanshi1 == _config.number("rules.itemCap"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l29.n1");
                   _root.wenben = "终于有回报了";
-                  _root.xianjin1 += _config.number("src.s34.l31.n1");
+                  _root.xianjin1 += _config.number("rules.shopDiamondRedeem");
                   _root.zuanshi1 = _config.number("src.s34.l32.n1");
                   if(_root.zhuyuan2 == _config.number("src.s34.l33.n1"))
                   {
@@ -2012,11 +2012,11 @@ function(__scope) { with (__scope) {
                      _invoke(_root.shaizi,"gotoAndPlay",_config.number("src.s34.l45.n1"));
                   }
                }
-               else if(_root.xianjin1 >= _config.number("src.s34.l48.n1"))
+               else if(_root.xianjin1 >= _config.number("rules.shopDiamondCash"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l51.n1");
-                  _root.xianjin1 -= _config.number("src.s34.l52.n1");
+                  _root.xianjin1 -= _config.number("rules.shopDiamondCash");
                   _root.zuanshi1++;
                   if(_root.zhuyuan2 == _config.number("src.s34.l54.n1"))
                   {
@@ -2040,12 +2040,12 @@ function(__scope) { with (__scope) {
             }
             else if(this._x == _config.number("src.s34.l74.n1"))
             {
-               if(_root.wuxing1 == _config.number("src.s34.l76.n1"))
+               if(_root.wuxing1 == _config.number("rules.itemCap"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l79.n1");
                   _root.wenben = "发笔小财";
-                  _root.xianjin1 += _config.number("src.s34.l81.n1");
+                  _root.xianjin1 += _config.number("rules.shopStarRedeem");
                   _root.wuxing1 = _config.number("src.s34.l82.n1");
                   if(_root.zhuyuan2 == _config.number("src.s34.l83.n1"))
                   {
@@ -2062,11 +2062,11 @@ function(__scope) { with (__scope) {
                      _invoke(_root.shaizi,"gotoAndPlay",_config.number("src.s34.l95.n1"));
                   }
                }
-               else if(_root.xianjin1 >= _config.number("src.s34.l98.n1"))
+               else if(_root.xianjin1 >= _config.number("rules.shopStarCash"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l101.n1");
-                  _root.xianjin1 -= _config.number("src.s34.l102.n1");
+                  _root.xianjin1 -= _config.number("rules.shopStarCash");
                   _root.wuxing1++;
                   if(_root.zhuyuan2 == _config.number("src.s34.l104.n1"))
                   {
@@ -2090,12 +2090,12 @@ function(__scope) { with (__scope) {
             }
             else if(this._x == _config.number("src.s34.l124.n1"))
             {
-               if(_root.yumao1 == _config.number("src.s34.l126.n1"))
+               if(_root.yumao1 == _config.number("rules.itemCap"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l129.n1");
                   _root.wenben = "有钱真好";
-                  _root.xianjin1 += _config.number("src.s34.l131.n1");
+                  _root.xianjin1 += _config.number("rules.shopCharmRedeem");
                   _root.yumao1 = _config.number("src.s34.l132.n1");
                   if(_root.zhuyuan2 == _config.number("src.s34.l133.n1"))
                   {
@@ -2112,11 +2112,11 @@ function(__scope) { with (__scope) {
                      _invoke(_root.shaizi,"gotoAndPlay",_config.number("src.s34.l145.n1"));
                   }
                }
-               else if(_root.xianjin1 >= _config.number("src.s34.l148.n1"))
+               else if(_root.xianjin1 >= _config.number("rules.shopCharmCash"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l151.n1");
-                  _root.xianjin1 -= _config.number("src.s34.l152.n1");
+                  _root.xianjin1 -= _config.number("rules.shopCharmCash");
                   _root.yumao1++;
                   if(_root.zhuyuan2 == _config.number("src.s34.l154.n1"))
                   {
@@ -2140,12 +2140,12 @@ function(__scope) { with (__scope) {
             }
             else if(this._x == _config.number("src.s34.l174.n1"))
             {
-               if(_root.dilei1 == _config.number("src.s34.l176.n1"))
+               if(_root.dilei1 == _config.number("rules.itemCap"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l179.n1");
                   _root.wenben = "赚发了";
-                  _root.xianjin1 += _config.number("src.s34.l181.n1");
+                  _root.xianjin1 += _config.number("rules.shopMineRedeem");
                   _root.dilei1 = _config.number("src.s34.l182.n1");
                   if(_root.zhuyuan2 == _config.number("src.s34.l183.n1"))
                   {
@@ -2162,11 +2162,11 @@ function(__scope) { with (__scope) {
                      _invoke(_root.shaizi,"gotoAndPlay",_config.number("src.s34.l195.n1"));
                   }
                }
-               else if(_root.xianjin1 >= _config.number("src.s34.l198.n1"))
+               else if(_root.xianjin1 >= _config.number("rules.shopMineCash"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l201.n1");
-                  _root.xianjin1 -= _config.number("src.s34.l202.n1");
+                  _root.xianjin1 -= _config.number("rules.shopMineCash");
                   _root.dilei1++;
                   if(_root.zhuyuan2 == _config.number("src.s34.l204.n1"))
                   {
@@ -2236,12 +2236,12 @@ function(__scope) { with (__scope) {
             _root.wenben = "谢谢惠顾";
             if(this._x == _config.number("src.s34.l270.n1"))
             {
-               if(_root.zuanshi2 == _config.number("src.s34.l272.n1"))
+               if(_root.zuanshi2 == _config.number("rules.itemCap"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l275.n1");
                   _root.wenben = "终于有回报了";
-                  _root.xianjin2 += _config.number("src.s34.l277.n1");
+                  _root.xianjin2 += _config.number("rules.shopDiamondRedeem");
                   _root.zuanshi2 = _config.number("src.s34.l278.n1");
                   if(_root.zhuyuan1 == _config.number("src.s34.l279.n1"))
                   {
@@ -2258,11 +2258,11 @@ function(__scope) { with (__scope) {
                      _invoke(_root.shaizi,"gotoAndPlay",_config.number("src.s34.l291.n1"));
                   }
                }
-               else if(_root.xianjin2 >= _config.number("src.s34.l294.n1"))
+               else if(_root.xianjin2 >= _config.number("rules.shopDiamondCash"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l297.n1");
-                  _root.xianjin2 -= _config.number("src.s34.l298.n1");
+                  _root.xianjin2 -= _config.number("rules.shopDiamondCash");
                   _root.zuanshi2++;
                   if(_root.zhuyuan1 == _config.number("src.s34.l300.n1"))
                   {
@@ -2286,12 +2286,12 @@ function(__scope) { with (__scope) {
             }
             else if(this._x == _config.number("src.s34.l320.n1"))
             {
-               if(_root.wuxing2 == _config.number("src.s34.l322.n1"))
+               if(_root.wuxing2 == _config.number("rules.itemCap"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l325.n1");
                   _root.wenben = "发笔小财";
-                  _root.xianjin2 += _config.number("src.s34.l327.n1");
+                  _root.xianjin2 += _config.number("rules.shopStarRedeem");
                   _root.wuxing2 = _config.number("src.s34.l328.n1");
                   if(_root.zhuyuan1 == _config.number("src.s34.l329.n1"))
                   {
@@ -2308,11 +2308,11 @@ function(__scope) { with (__scope) {
                      _invoke(_root.shaizi,"gotoAndPlay",_config.number("src.s34.l341.n1"));
                   }
                }
-               else if(_root.xianjin2 >= _config.number("src.s34.l344.n1"))
+               else if(_root.xianjin2 >= _config.number("rules.shopStarCash"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l347.n1");
-                  _root.xianjin2 -= _config.number("src.s34.l348.n1");
+                  _root.xianjin2 -= _config.number("rules.shopStarCash");
                   _root.wuxing2++;
                   if(_root.zhuyuan1 == _config.number("src.s34.l350.n1"))
                   {
@@ -2336,12 +2336,12 @@ function(__scope) { with (__scope) {
             }
             else if(this._x == _config.number("src.s34.l370.n1"))
             {
-               if(_root.yumao2 == _config.number("src.s34.l372.n1"))
+               if(_root.yumao2 == _config.number("rules.itemCap"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l375.n1");
                   _root.wenben = "有钱真好";
-                  _root.xianjin2 += _config.number("src.s34.l377.n1");
+                  _root.xianjin2 += _config.number("rules.shopCharmRedeem");
                   _root.yumao2 = _config.number("src.s34.l378.n1");
                   if(_root.zhuyuan1 == _config.number("src.s34.l379.n1"))
                   {
@@ -2358,11 +2358,11 @@ function(__scope) { with (__scope) {
                      _invoke(_root.shaizi,"gotoAndPlay",_config.number("src.s34.l391.n1"));
                   }
                }
-               else if(_root.xianjin2 >= _config.number("src.s34.l394.n1"))
+               else if(_root.xianjin2 >= _config.number("rules.shopCharmCash"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l397.n1");
-                  _root.xianjin2 -= _config.number("src.s34.l398.n1");
+                  _root.xianjin2 -= _config.number("rules.shopCharmCash");
                   _root.yumao2++;
                   if(_root.zhuyuan1 == _config.number("src.s34.l400.n1"))
                   {
@@ -2386,12 +2386,12 @@ function(__scope) { with (__scope) {
             }
             else if(this._x == _config.number("src.s34.l420.n1"))
             {
-               if(_root.dilei2 == _config.number("src.s34.l422.n1"))
+               if(_root.dilei2 == _config.number("rules.itemCap"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l425.n1");
                   _root.wenben = "赚发了";
-                  _root.xianjin2 += _config.number("src.s34.l427.n1");
+                  _root.xianjin2 += _config.number("rules.shopMineRedeem");
                   _root.dilei2 = _config.number("src.s34.l428.n1");
                   if(_root.zhuyuan1 == _config.number("src.s34.l429.n1"))
                   {
@@ -2408,11 +2408,11 @@ function(__scope) { with (__scope) {
                      _invoke(_root.shaizi,"gotoAndPlay",_config.number("src.s34.l441.n1"));
                   }
                }
-               else if(_root.xianjin2 >= _config.number("src.s34.l444.n1"))
+               else if(_root.xianjin2 >= _config.number("rules.shopMineCash"))
                {
                   this._visible = false;
                   h = _config.number("src.s34.l447.n1");
-                  _root.xianjin2 -= _config.number("src.s34.l448.n1");
+                  _root.xianjin2 -= _config.number("rules.shopMineCash");
                   _root.dilei2++;
                   if(_root.zhuyuan1 == _config.number("src.s34.l450.n1"))
                   {
@@ -2474,7 +2474,7 @@ function(__scope) { with (__scope) {
    if(Key.getCode() == _config.number("src.s36.l2.n1") && _root.shui == _config.number("src.s36.l2.n2"))
    {
       _root.wenben = _root.name1 + "鸟枪换炮了";
-      _root.wuxing1--;
+      _root.wuxing1 -= _config.number("rules.upgradeStars");
       _root.f11--;
       _root.f12++;
       _root.jibie[_root.weizhi] = _config.number("src.s36.l8.n1");
@@ -2518,7 +2518,7 @@ function(__scope) { with (__scope) {
    else if(Key.getCode() == _config.number("src.s36.l46.n1") && _root.shui == _config.number("src.s36.l46.n2"))
    {
       _root.wenben = _root.name2 + "鸟枪换炮了";
-      _root.wuxing2--;
+      _root.wuxing2 -= _config.number("rules.upgradeStars");
       _root.f21--;
       _root.f22++;
       _root.jibie[_root.weizhi] = _config.number("src.s36.l52.n1");
@@ -3215,12 +3215,12 @@ function(__scope) { with (__scope) {
             _invoke(_root,"attachMovie","jianfang","jianfang",_config.number("src.s42.l162.n1"),{_x:_config.number("src.s42.l162.n2"),_y:_config.number("src.s42.l162.n3")});
             _root.tanchu = _config.number("src.s42.l163.n1");
          }
-         else if(_root.shuyu[_root.weizhi] == _config.number("src.s42.l165.n1") && _root.wuxing1 >= _config.number("src.s42.l165.n2") && _root.jibie[_root.weizhi] == _config.number("src.s42.l165.n3"))
+         else if(_root.shuyu[_root.weizhi] == _config.number("src.s42.l165.n1") && _root.wuxing1 >= _config.number("rules.upgradeStars") && _root.jibie[_root.weizhi] == _config.number("src.s42.l165.n3"))
          {
             _invoke(_root,"attachMovie","shengji","shengji",_config.number("src.s42.l167.n1"),{_x:_config.number("src.s42.l167.n2"),_y:_config.number("src.s42.l167.n3")});
             _root.tanchu = _config.number("src.s42.l168.n1");
          }
-         else if(_root.shuyu[_root.weizhi] == _config.number("src.s42.l170.n1") && _root.wuxing1 >= _config.number("src.s42.l170.n2") && _root.jibie[_root.weizhi] == _config.number("src.s42.l170.n3"))
+         else if(_root.shuyu[_root.weizhi] == _config.number("src.s42.l170.n1") && _root.wuxing1 >= _config.number("rules.upgradeStars") && _root.jibie[_root.weizhi] == _config.number("src.s42.l170.n3"))
          {
             _invoke(_root,"attachMovie","bieshu","bieshu",_config.number("src.s42.l172.n1"),{_x:_config.number("src.s42.l172.n2"),_y:_config.number("src.s42.l172.n3")});
             _root.tanchu = _config.number("src.s42.l173.n1");
@@ -3552,12 +3552,12 @@ function(__scope) { with (__scope) {
             _invoke(_root,"attachMovie","jianfang","jianfang",_config.number("src.s43.l162.n1"),{_x:_config.number("src.s43.l162.n2"),_y:_config.number("src.s43.l162.n3")});
             _root.tanchu = _config.number("src.s43.l163.n1");
          }
-         else if(_root.shuyu[_root.weizhi] == _config.number("src.s43.l165.n1") && _root.wuxing2 >= _config.number("src.s43.l165.n2") && _root.jibie[_root.weizhi] == _config.number("src.s43.l165.n3"))
+         else if(_root.shuyu[_root.weizhi] == _config.number("src.s43.l165.n1") && _root.wuxing2 >= _config.number("rules.upgradeStars") && _root.jibie[_root.weizhi] == _config.number("src.s43.l165.n3"))
          {
             _invoke(_root,"attachMovie","shengji","shengji",_config.number("src.s43.l167.n1"),{_x:_config.number("src.s43.l167.n2"),_y:_config.number("src.s43.l167.n3")});
             _root.tanchu = _config.number("src.s43.l168.n1");
          }
-         else if(_root.shuyu[_root.weizhi] == _config.number("src.s43.l170.n1") && _root.wuxing2 >= _config.number("src.s43.l170.n2") && _root.jibie[_root.weizhi] == _config.number("src.s43.l170.n3"))
+         else if(_root.shuyu[_root.weizhi] == _config.number("src.s43.l170.n1") && _root.wuxing2 >= _config.number("rules.upgradeStars") && _root.jibie[_root.weizhi] == _config.number("src.s43.l170.n3"))
          {
             _invoke(_root,"attachMovie","bieshu","bieshu",_config.number("src.s43.l172.n1"),{_x:_config.number("src.s43.l172.n2"),_y:_config.number("src.s43.l172.n3")});
             _root.tanchu = _config.number("src.s43.l173.n1");

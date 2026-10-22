@@ -42,9 +42,10 @@ if (typeof module !== 'undefined') module.exports = RichmanOverrides;
 | `public/app.js` | Canvas 渲染、缩放及浏览器输入 |
 | `public/settings.js` | 配置校验与应用 |
 | `public/config/overrides.js` | 人工配置，生成器不覆盖 |
+| `public/extensions.js` | 人工扩展钩子，生成器不覆盖 |
 | `tests/` | 规则、配置与连续对局测试 |
 
-开发测试需要 Node.js；重新生成需要 Python 3 标准库。运行发布包不需要这两项。
+开发测试需要 Node.js 18+；重新生成需要 Python 3.9+ 标准库。运行发布包不需要这两项。
 
 ```powershell
 npm run build
@@ -52,8 +53,11 @@ npm test
 npm run test:journey
 npm start
 python scripts/privacy.py
+python scripts/verify-regeneration.py
 ```
 
 开发服务地址：`http://127.0.0.1:8319/`。构建读取随仓库提供的恢复源，无需原 SWF、FFDec、联网下载或访问开发者私人目录。
+
+可运行 `git config core.hooksPath .githooks` 启用提交前隐私扫描；检查的是 Git 暂存内容，不会漏过“暂存有密钥、工作文件已清理”的情况。
 
 当前验收范围和已知问题见[交付状态](docs/STATUS.md)。权利和再分发说明单列于 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

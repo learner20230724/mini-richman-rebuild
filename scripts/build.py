@@ -37,13 +37,19 @@ def build():
       'houseCash':200,'rentHouse':100,'rentTower':200,
       'stepMilliseconds':700,'selectionTickMilliseconds':100,'selectionTicks':20,
       'minuteMilliseconds':60000,'diceFaces':6,
+      'upgradeStars':1,'itemCap':5,
+      'shopDiamondCash':200,'shopStarCash':100,'shopCharmCash':200,'shopMineCash':300,
+      'shopDiamondRedeem':2000,'shopStarRedeem':1000,'shopCharmRedeem':2000,'shopMineRedeem':3000,
     }
     def parameterize(text,path,sid):
         result=[]
         # A tokenizer, not a global digit replacement: quoted messages, linkage
         # IDs and identifiers retain their exact original bytes.
         token=re.compile(r'"(?:\\.|[^"\\])*"|\b\d+(?:\.\d+)?\b')
+        shop_item=None
         for line_no,line in enumerate(text.splitlines(keepends=True),1):
+            selection=re.search(r'if\(this\._x == (0|50|100|150)\)',line)
+            if selection:shop_item={'0':'Diamond','50':'Star','100':'Charm','150':'Mine'}[selection[1]]
             ordinal=0
             def replace(m):
                 nonlocal ordinal
@@ -65,6 +71,13 @@ def build():
                 if path.startswith('frame_2/PlaceObject2_206') or path.startswith('DefineSprite_20_baohu/'):
                     rent=re.search(r'_root.xianjin[12] (?:-=|\+=) (100|200)(?: \*|;)',line)
                     if rent and m.start()==rent.start(1):alias='rentHouse' if rent[1]=='100' else 'rentTower'
+                stars=re.search(r'_root.wuxing[12] >= (1)',line)
+                if stars and m.start()==stars.start(1):alias='upgradeStars'
+                cap=re.search(r'_root\.(?:zuanshi|wuxing|yumao|dilei)[12] (?:==|<) (5)',line)
+                if cap and m.start()==cap.start(1):alias='itemCap'
+                if path.startswith('DefineSprite_94_chaoshi/') and shop_item:
+                    cash=re.search(r'_root.xianjin[12] (>=|-=|\+=) (\d+)',line)
+                    if cash and m.start()==cash.start(2):alias='shop'+shop_item+('Redeem' if cash[1]=='+=' else 'Cash')
                 if alias and value!=aliases[alias]:raise ValueError(('Alias default mismatch',path,line,raw,alias))
                 effective='rules.'+alias if alias else key
                 numbers[effective]=value
@@ -100,6 +113,8 @@ def build():
         # when the dice movie has been removed. JS must not throw there.
         body=re.sub(r'\b(_root(?:\.\w+)?|_parent(?:\.\w+)?|this|ss)\.(gotoAndPlay|gotoAndStop|attachMovie|attachSound|start|stop)\(',
                     lambda m:'_invoke('+m[1]+','+json.dumps(m[2])+',',body)
+        if relative.startswith(('DefineSprite_9_shengji/','DefineSprite_16_bieshu/')):
+            body=re.sub(r'(_root.wuxing[12])--;',r'\1 -= _config.number("rules.upgradeStars");',body)
         body=body.replace('"请付100元住宿费"','"请付" + _config.number("rules.rentHouse") + "元住宿费"')
         body=body.replace('"请付200元住宿费"','"请付" + _config.number("rules.rentTower") + "元住宿费"')
         # Named function expressions retain recursion while assignments persist

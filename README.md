@@ -42,9 +42,10 @@ A purchase retains the original **whole-band ownership** rule. A per-tile price 
 | `public/app.js` | Canvas renderer, scaling and browser input |
 | `public/settings.js` | Configuration validation/application |
 | `public/config/overrides.js` | Human-owned configuration |
+| `public/extensions.js` | Human-owned extension hooks |
 | `tests/` | Rules, configuration and continuous-game tests |
 
-Development tests need Node.js. Regeneration needs Python 3's standard library. Neither is needed to play the release package.
+Development tests need Node.js 18+. Regeneration needs Python 3.9+'s standard library. Neither is needed to play the release package.
 
 ```text
 npm run build
@@ -52,8 +53,12 @@ npm test
 npm run test:journey
 npm start
 python scripts/privacy.py
+python scripts/verify-regeneration.py
 ```
 
 Development server: `http://127.0.0.1:8319/`. Build inputs are included; no original SWF, FFDec installation, network download or developer-private directory is needed.
+
+Enable the pre-commit privacy scan with `git config core.hooksPath .githooks`.
+It checks actual Git-index bytes, including a staged-secret/clean-working-tree regression case.
 
 See [delivery status](docs/STATUS.md) for actual verification scope and remaining issues. Rights and redistribution information are separate in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

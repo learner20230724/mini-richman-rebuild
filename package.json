@@ -2,7 +2,8 @@
   "name":"mini-richman-rebuild",
   "version":"0.1.0",
   "private":true,
+  "engines":{"node":">=18"},
   "license":"UNLICENSED",
   "description":"Editable reconstruction of the 4399 Mini Richman Flash game",
-  "scripts":{"start":"node scripts/serve.cjs","build":"python scripts/build.py","test":"node --test tests/*.test.cjs","test:journey":"node tests/journey.cjs"}
+  "scripts":{"start":"node scripts/serve.cjs","build":"python scripts/build.py","test":"node --test tests/*.test.cjs","test:journey":"node tests/journey.cjs","test:privacy":"python tests/privacy.test.py","test:regeneration":"python scripts/verify-regeneration.py","package":"python scripts/package-release.py"}
 }
