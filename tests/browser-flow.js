@@ -42,11 +42,15 @@ async (page) => {
   check('no runtime errors',await page.evaluate(()=>richman.errors.length===0&&document.getElementById('error').textContent===''));
   // Separate controlled configuration UI fixture, same settings path as file.
   await page.reload();await page.waitForFunction(()=>!!window.richman);
-  await page.evaluate(()=>{richman.options.settings.overrides.characters={b6:{cash:12000}};});
+  await page.evaluate(()=>{richman.options.settings.overrides.characters={b6:{cash:12000}};richman.options.settings.overrides.properties={'1':{cash:37,diamonds:0}};});
   await page.screenshot({path:'output/playwright/verified-custom-menu.png'});
   for(let i=0;i<4;i++)await page.keyboard.press('d');
   await page.keyboard.press('w');await page.keyboard.press('ArrowUp');await page.waitForFunction(()=>richman.root.frame===2);
   check('configured starting cash on board',await page.evaluate(()=>richman.root.vars.xianjin1===12000));
+  await page.evaluate(()=>{richman.randomQueue=[0.1];});await page.keyboard.press('w');await page.waitForFunction(()=>richman.root.vars.tanchu===1);
+  check('configured cost appears in compact confirmation',await page.evaluate(()=>richman.root.vars.wenben==='买地：37元，0钻石？'));
+  await page.screenshot({path:'output/playwright/verified-custom-price.png'});
+  await page.keyboard.press('w');check('configured cost is actually paid',await page.evaluate(()=>richman.root.vars.xianjin1===11963&&richman.root.vars.zuanshi1===3));
   check('no browser exceptions',errors.length===0,errors);
   return {pass:true,checks,fixtureScope:'Real keyboard UI with explicitly injected dice/bankruptcy/config fixtures. Not natural rendered full-game proof or original-runtime differential.'};
 }

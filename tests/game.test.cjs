@@ -139,7 +139,7 @@ test('rent bankruptcy reaches winner scene',()=>{
 });
 test('character and property overrides affect real payment',()=>{
   const g=game('b6','b1',{characters:{b6:{cash:9999}},properties:{'1':{cash:37,diamonds:0}}}),v=land(g);
-  assert.equal(v.xianjin1,9999);g.keyDown(87);assert.equal(v.xianjin1,9962);assert.equal(v.zuanshi1,3);
+  assert.equal(v.xianjin1,9999);assert.equal(v.wenben,'买地：37元，0钻石？');g.keyDown(87);assert.equal(v.xianjin1,9962);assert.equal(v.zuanshi1,3);
 });
 test('named houseCost override affects both affordability and actual debit',()=>{
   const g=game('b6','b1',{numbers:{'rules.houseCash':321}}),v=g.root.vars;v.xianjin1=320;

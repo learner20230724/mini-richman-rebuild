@@ -1,6 +1,6 @@
 # Delivery status / 交付状态
 
-Updated 2026-10-23, Asia/Shanghai. **First runnable reconstruction; not a claim of
+Updated 2026-10-23, Asia/Shanghai. **Runnable reconstruction v0.1.1; not a claim of
 native-Flash or full-pixel equivalence.** [Verification summary](VERIFICATION.json)
 
 ## Implemented and checked / 已实现及已检查
@@ -13,10 +13,13 @@ native-Flash or full-pixel equivalence.** [Verification summary](VERIFICATION.js
 - Three natural headless key-only games reached the winner scene with original
   values. Seeds 5976/42/123456: 463/465/456 rolls. The declared policy deliberately
   invests for P1 and declines investments for P2; no money/position/dice injection.
-- 16 browser-flow checks and 6 additional screen checks passed in Edge: real menu
+- 18 browser-flow checks and 6 additional screen checks passed in Edge: real menu
   keys, whole-band purchase, controlled rent bankruptcy, shop, casino, fortune,
   hospital, 600x450/1280x720/1920x1080 scaling, pointer mapping and fullscreen.
   Explicit fixture setup is not described as natural browser-game completion.
+- v0.1.1 shortens custom-price confirmation to fit the original narrow message
+  field. Configured cost visibility and actual payment are both browser-checked;
+  the original empty-override rules and numeric defaults are unchanged.
 - Initial menu, custom menu, board, purchase popup and winner were visually
   inspected. Windows PowerShell's loopback server loaded the actual application
   without Node/Java/Flash.

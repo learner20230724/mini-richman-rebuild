@@ -34,7 +34,7 @@
       // diamond prices whose original map artwork is a row of bitmap icons.
       if(clip.id===10&&game.root.vars.weizhi){
         const tile=game.root.vars.weizhi;
-        if(this.overrides.properties?.[tile])game.root.vars.wenben='是否买下此块地皮（'+game.root.vars.xianjin[tile]+'元，'+game.root.vars.zuanshi[tile]+'钻石）';
+        if(this.overrides.properties?.[tile])game.root.vars.wenben='买地：'+game.root.vars.xianjin[tile]+'元，'+game.root.vars.zuanshi[tile]+'钻石？';
       }
     }
   }

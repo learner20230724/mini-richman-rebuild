@@ -142,6 +142,14 @@
           "pass": true
         },
         {
+          "name": "configured cost appears in compact confirmation",
+          "pass": true
+        },
+        {
+          "name": "configured cost is actually paid",
+          "pass": true
+        },
+        {
           "name": "no browser exceptions",
           "pass": true,
           "detail": []
@@ -178,7 +186,8 @@
         }
       ],
       "fixtureScope": "Controlled browser state setup plus real keyboard and original timing; not a natural full-game run or Flash differential."
-    }
+    },
+    "testedSourceVersion": "0.1.1"
   },
   "cleanClone": {
     "sourceCommit": "d23136f0dfcf47942a9c2e0b28ced875b1db6381",
@@ -201,5 +210,12 @@
     "fullPixelEqualityProven": false,
     "audioBytesPresentInSource": false,
     "fileProtocolAutomationAvailable": false
+  },
+  "configurationRevision": {
+    "version": "0.1.1",
+    "compactPriceConfirmationVisible": true,
+    "configuredPurchaseDebitVerified": true,
+    "defaultRulesChanged": false,
+    "regenerationRechecked": true
   }
 }
