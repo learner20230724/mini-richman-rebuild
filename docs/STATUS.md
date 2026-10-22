@@ -1,6 +1,7 @@
 # Delivery status / 交付状态
 
-Updated 2026-10-23, Asia/Shanghai. **In development; not a complete-delivery claim.**
+Updated 2026-10-23, Asia/Shanghai. **First runnable reconstruction; not a claim of
+native-Flash or full-pixel equivalence.** [Verification summary](VERIFICATION.json)
 
 ## Implemented and checked / 已实现及已检查
 
@@ -27,10 +28,25 @@ Updated 2026-10-23, Asia/Shanghai. **In development; not a complete-delivery cla
 - Code has actually been pushed to the public repository:
   <https://github.com/learner20230724/mini-richman-rebuild>.
 
-## Remaining acceptance / 待完成验收
+## Standalone delivery / 独立交付
 
-- Independent original-runtime comparison; no full pixel-equivalence claim.
-- Clean-clone rebuild and detached package testing, matching Release and final sizes.
+- A clean public clone rebuilt without the original SWF, FFDec, Java or any
+  private local inputs. All 143 unit tests passed; generated outputs were unchanged.
+- A detached candidate ZIP passed every manifest/file hash and privacy check.
+  It ran using built-in Windows PowerShell with a system-only PATH, without
+  Node/Java/Flash visibility. All 22 browser checks passed against that extraction.
+- The final portable ZIP is built from an exact committed Git tree and contains
+  `release-manifest.json` identifying that commit and hashing all payload files.
+- Downloads: <https://github.com/learner20230724/mini-richman-rebuild/releases>.
+- Approximate storage: complete source checkout **9.8 MB**, including about
+  **1.8 MB** of runtime editable asset files; runtime ZIP about **3.0 MB**, about
+  **5.3 MB** extracted. These are decimal MB and are not additive asset/source totals.
+
+## Known limits / 已知边界
+
+Independent original-runtime differential and full pixel equality have not been
+proven. The implementation follows recovered scripts and source-derived values;
+the tests do not certify every branch or every possible custom configuration.
 
 Custom character values now update both the selection table and runtime state.
 Existing map cash labels show configured cash/ranges, and purchase confirmation

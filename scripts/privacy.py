@@ -9,7 +9,7 @@ RULES={
     'private-key':re.compile(r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'),
     'authorization-value':re.compile(r'(?i)authorization[\"\s:=]+(?:bearer|token)\s+[A-Za-z0-9_.-]{20,}'),
 }
-EXTENSIONS={'.js','.cjs','.py','.ps1','.cmd','.html','.json','.md','.xml','.svg','.txt','.yml','.yaml','.toml','.as',''}
+EXTENSIONS={'.js','.cjs','.py','.ps1','.cmd','.html','.json','.md','.xml','.svg','.txt','.yml','.yaml','.toml','.as','.png','.ttf',''}
 def index_bytes(root,paths):
     entries=subprocess.check_output(['git','ls-files','--stage','-z'],cwd=root)
     objects={}
@@ -38,13 +38,16 @@ def scan(root,paths,indexed=False):
         p=root/path
         if p.suffix.lower() not in EXTENSIONS:continue
         if not indexed and not p.is_file():continue
-        try:
-            raw=staged[path.as_posix()] if indexed else p.read_bytes()
-            text=raw.decode('utf-8-sig')
-        except UnicodeDecodeError:continue
+        raw=staged[path.as_posix()] if indexed else p.read_bytes()
+        try:text=raw.decode('utf-8-sig')
+        except UnicodeDecodeError:text=raw.decode('latin1')
         count+=1
-        for name,rule in RULES.items():
-            for m in rule.finditer(text):errors.append({'file':path.as_posix(),'rule':name,'line':text.count('\n',0,m.start())+1})
+        texts=[('text',text)]
+        if p.suffix.lower() in {'.png','.ttf'}:
+            texts.extend((encoding,raw.decode(encoding,errors='ignore')) for encoding in ['utf-16le','utf-16be'])
+        for encoding,text in texts:
+            for name,rule in RULES.items():
+                for m in rule.finditer(text):errors.append({'file':path.as_posix(),'rule':name,'encoding':encoding,'line':text.count('\n',0,m.start())+1})
     return {'filesScanned':count,'violations':errors,'pass':not errors}
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--staged',action='store_true');args=parser.parse_args()

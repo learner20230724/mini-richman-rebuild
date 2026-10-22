@@ -1,0 +1,205 @@
+{
+  "date": "2026-10-23",
+  "timezone": "Asia/Shanghai",
+  "sourceSWFSHA256": "085e03379de664bb079659b55aba5d1ea5c86b8fbd7b4f1e9ed4f71c38dc1811",
+  "unitTests": {
+    "passed": 143,
+    "failed": 0,
+    "scriptBlocksExercised": 45,
+    "totalScriptBlocks": 45,
+    "scope": "Controlled source-based fixtures plus a real-menu keyboard test; not independent original-runtime differential parity or natural complete-game proof."
+  },
+  "headlessNaturalJourneys": {
+    "scope": "Headless reconstructed game, original character stats and key-only asymmetric investing/declining policy; no Flash/rendered-browser differential.",
+    "results": [
+      {
+        "seed": 5976,
+        "pass": true,
+        "winner": "胜利者是小镁",
+        "elapsedMilliseconds": 1285200,
+        "rolls": 463
+      },
+      {
+        "seed": 42,
+        "pass": true,
+        "winner": "胜利者是小镁",
+        "elapsedMilliseconds": 1282600,
+        "rolls": 465
+      },
+      {
+        "seed": 123456,
+        "pass": true,
+        "winner": "胜利者是小镁",
+        "elapsedMilliseconds": 1244400,
+        "rolls": 456
+      }
+    ]
+  },
+  "browser": {
+    "flow": {
+      "pass": true,
+      "checks": [
+        {
+          "name": "game-only document",
+          "pass": true
+        },
+        {
+          "name": "aspect and bounds 600x450",
+          "pass": true,
+          "detail": {
+            "x": 0,
+            "y": 0,
+            "width": 600,
+            "height": 450
+          }
+        },
+        {
+          "name": "scaled pointer 600x450",
+          "pass": true,
+          "detail": {
+            "x": 420,
+            "y": 135
+          }
+        },
+        {
+          "name": "aspect and bounds 1280x720",
+          "pass": true,
+          "detail": {
+            "x": 160,
+            "y": 0,
+            "width": 960,
+            "height": 720
+          }
+        },
+        {
+          "name": "scaled pointer 1280x720",
+          "pass": true,
+          "detail": {
+            "x": 420,
+            "y": 135
+          }
+        },
+        {
+          "name": "aspect and bounds 1920x1080",
+          "pass": true,
+          "detail": {
+            "x": 240,
+            "y": 0,
+            "width": 1440,
+            "height": 1080
+          }
+        },
+        {
+          "name": "scaled pointer 1920x1080",
+          "pass": true,
+          "detail": {
+            "x": 420,
+            "y": 135
+          }
+        },
+        {
+          "name": "fullscreen enters",
+          "pass": true
+        },
+        {
+          "name": "fullscreen exits",
+          "pass": true
+        },
+        {
+          "name": "real menu selects b6/b2",
+          "pass": true
+        },
+        {
+          "name": "purchase popup visible",
+          "pass": true
+        },
+        {
+          "name": "real keyboard purchase changes whole band",
+          "pass": true,
+          "detail": {
+            "cash": 1600,
+            "diamonds": 0,
+            "owners": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "turn": 2
+          }
+        },
+        {
+          "name": "winner scene from real rent handler",
+          "pass": true
+        },
+        {
+          "name": "no runtime errors",
+          "pass": true
+        },
+        {
+          "name": "configured starting cash on board",
+          "pass": true
+        },
+        {
+          "name": "no browser exceptions",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "fixtureScope": "Real keyboard UI with explicitly injected dice/bankruptcy/config fixtures. Not natural rendered full-game proof or original-runtime differential."
+    },
+    "additionalScreens": {
+      "pass": true,
+      "checks": [
+        {
+          "name": "shop buys star with keyboard",
+          "pass": true
+        },
+        {
+          "name": "casino deducts actual wager",
+          "pass": true
+        },
+        {
+          "name": "casino spin resolves",
+          "pass": true
+        },
+        {
+          "name": "fortune animation pays recovered 300",
+          "pass": true
+        },
+        {
+          "name": "mine moves player into hospital",
+          "pass": true
+        },
+        {
+          "name": "no runtime errors",
+          "pass": true
+        }
+      ],
+      "fixtureScope": "Controlled browser state setup plus real keyboard and original timing; not a natural full-game run or Flash differential."
+    }
+  },
+  "cleanClone": {
+    "sourceCommit": "d23136f0dfcf47942a9c2e0b28ced875b1db6381",
+    "originalSWFPresent": false,
+    "buildWithoutPrivateInputs": true,
+    "generatedOutputUnchanged": true,
+    "unitTestsPassed": 143,
+    "humanConfigurationPreserved": true
+  },
+  "detachedCandidate": {
+    "sourceCommit": "d23136f0dfcf47942a9c2e0b28ced875b1db6381",
+    "zipSHA256": "d9dc36cbe5fda94fc7ce0cb15478c981211ca1d072ca0f705c3c330a5fa28559",
+    "manifestAllFilesVerified": true,
+    "publicPayloadMatchesWorkingSource": true,
+    "powershellSystemOnlyPath": true,
+    "browserChecksPassed": 22
+  },
+  "limits": {
+    "nativeFlashDifferential": false,
+    "fullPixelEqualityProven": false,
+    "audioBytesPresentInSource": false,
+    "fileProtocolAutomationAvailable": false
+  }
+}

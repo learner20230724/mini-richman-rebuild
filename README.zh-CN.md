@@ -1,6 +1,6 @@
 # 迷你大富翁
 
-[English](README.md) · [默认参数与规则](docs/DEFAULTS.md) · [交付状态](docs/STATUS.md)
+[English](README.md) · [默认参数与规则](docs/DEFAULTS.md) · [交付状态](docs/STATUS.md) · [下载运行包](https://github.com/learner20230724/mini-richman-rebuild/releases)
 
 双人同屏经营棋盘游戏，保留七名角色、买地、建房升级、税后租金、道具、赌场、命运事件、住院与破产结算。游戏运行在现代浏览器中，不播放 SWF，不依赖 Flash 或 Ruffle。
 

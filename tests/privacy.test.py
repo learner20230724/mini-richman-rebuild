@@ -17,4 +17,6 @@ with tempfile.TemporaryDirectory(dir=ROOT/'output') as tmp:
     p.write_text('clean working tree\n','utf-8')
     assert privacy.scan(root,[Path('example.txt')])['pass']
     assert not privacy.scan(root,[Path('example.txt')],indexed=True)['pass']
+    binary=root/'metadata.ttf';binary.write_bytes(b'\x00\x01'+personal.encode('utf-16be'))
+    assert not privacy.scan(root,[Path('metadata.ttf')])['pass']
 print('PASS: token/path canaries and staged-secret/clean-working-tree regression')

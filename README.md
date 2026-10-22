@@ -1,6 +1,6 @@
 # Mini Richman
 
-[中文](README.zh-CN.md) · [Default parameters and rules](docs/DEFAULTS.md) · [Delivery status](docs/STATUS.md)
+[中文](README.zh-CN.md) · [Default parameters and rules](docs/DEFAULTS.md) · [Delivery status](docs/STATUS.md) · [Downloads](https://github.com/learner20230724/mini-richman-rebuild/releases)
 
 A local two-player board game with seven characters, whole-band property purchases, building upgrades, taxed rent, items, two casino games, fortune events, hospital stays and bankruptcy. The reconstructed game runs in a modern browser without playing a SWF or requiring Flash/Ruffle.
 
