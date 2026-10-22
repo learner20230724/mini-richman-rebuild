@@ -7,7 +7,7 @@ if git('status','--porcelain').strip():raise SystemExit('Commit tracked changes 
 commit=git('rev-parse','HEAD').decode().strip()
 version=json.loads(git('show',commit+':package.json'))['version']
 names=[p.decode('utf-8') for p in git('ls-tree','-r','--name-only','-z',commit).split(b'\0') if p]
-exact={'Start-Game.cmd','Start-Local-Game.cmd','scripts/Start-Local.ps1','README.md','README.zh-CN.md','LICENSE','THIRD_PARTY_NOTICES.md','docs/DEFAULTS.md','docs/STATUS.md','data/number-sources.json'}
+exact={'Start-Game.cmd','Start-Local-Game.cmd','scripts/Start-Local.ps1','README.md','README.zh-CN.md','LICENSE','THIRD_PARTY_NOTICES.md','docs/DEFAULTS.md','docs/STATUS.md','docs/VERIFICATION.json','data/number-sources.json'}
 selected=[p for p in names if p.startswith('public/') or p in exact]
 payload={p:git('show',commit+':'+p) for p in selected}
 manifest={'version':version,'sourceCommit':commit,'sourceRepository':'https://github.com/learner20230724/mini-richman-rebuild','sourceSWFSHA256':'085e03379de664bb079659b55aba5d1ea5c86b8fbd7b4f1e9ed4f71c38dc1811','runtimeRequiresSWF':False,'runtimeRequiresNode':False,'runtimeRequiresJava':False,
