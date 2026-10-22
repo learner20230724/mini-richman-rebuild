@@ -10,14 +10,36 @@ RULES={
     'authorization-value':re.compile(r'(?i)authorization[\"\s:=]+(?:bearer|token)\s+[A-Za-z0-9_.-]{20,}'),
 }
 EXTENSIONS={'.js','.cjs','.py','.ps1','.cmd','.html','.json','.md','.xml','.svg','.txt','.yml','.yaml','.toml','.as',''}
+def index_bytes(root,paths):
+    entries=subprocess.check_output(['git','ls-files','--stage','-z'],cwd=root)
+    objects={}
+    for entry in entries.split(b'\0'):
+        if not entry:continue
+        meta,name=entry.split(b'\t',1);mode,sha,stage=meta.split()
+        if stage!=b'0':raise ValueError('Unmerged Git index cannot be certified')
+        objects[name.decode('utf-8')]=sha
+    selected={p.as_posix():objects[p.as_posix()] for p in paths if p.suffix.lower() in EXTENSIONS}
+    ids=list(dict.fromkeys(selected.values()))
+    if not ids:return {}
+    data=subprocess.check_output(['git','cat-file','--batch'],input=b'\n'.join(ids)+b'\n',cwd=root)
+    blobs={};cursor=0
+    for expected in ids:
+        end=data.index(b'\n',cursor);sha,kind,length=data[cursor:end].split()
+        if sha!=expected or kind!=b'blob':raise ValueError('Unexpected index object')
+        cursor=end+1;size=int(length);blobs[sha]=data[cursor:cursor+size];cursor+=size
+        if data[cursor:cursor+1]!=b'\n':raise ValueError('Malformed Git batch boundary')
+        cursor+=1
+    if cursor!=len(data):raise ValueError('Unexpected trailing index bytes')
+    return {name:blobs[sha] for name,sha in selected.items()}
 def scan(root,paths,indexed=False):
     errors=[];count=0
+    staged=index_bytes(root,paths) if indexed else None
     for path in paths:
         p=root/path
         if p.suffix.lower() not in EXTENSIONS:continue
         if not indexed and not p.is_file():continue
         try:
-            raw=subprocess.check_output(['git','show',':'+path.as_posix()],cwd=root) if indexed else p.read_bytes()
+            raw=staged[path.as_posix()] if indexed else p.read_bytes()
             text=raw.decode('utf-8-sig')
         except UnicodeDecodeError:continue
         count+=1
