@@ -40,8 +40,14 @@ native-Flash or full-pixel equivalence.** [Verification summary](VERIFICATION.js
 
 下面 v0.2.0 与 v0.1.1 的数据为历史记录，不用于代替本轮验收。
 
-The v0.2.0/v0.1.1 records below are historical. Standalone v0.3.0 package validation
-is recorded separately before publication.
+- An actual detached v0.3.0 ZIP passed all 32 live-update browser checks using
+  its included Windows PowerShell server with Node/Java absent from PATH.
+  The final tagged runtime is matched to that tested payload by digest.
+  Package hashes and candidate commit are recorded in VERIFICATION.json.
+- Approximate current storage: 10.1 MB tracked source (including 1.8 MB runtime
+  asset files), 3.1 MB ZIP / 5.6 MB extracted. Decimal values, not additive.
+
+The v0.2.0/v0.1.1 records below are historical.
 
 See [the customization guide](CUSTOMIZATION.md) for exact application, queue,
 persistence and advanced-setting limits.

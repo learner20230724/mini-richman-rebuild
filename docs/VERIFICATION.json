@@ -999,7 +999,7 @@
     }
   },
   "liveCustomizationV030": {
-    "phase": "source verified; standalone package validation follows before publication",
+    "phase": "source and detached portable runtime verified",
     "unitTestsPassed": 278,
     "unitTestsFailed": 0,
     "originalScriptBlocksExercised": 45,
@@ -3720,6 +3720,20 @@
       "generatedOutputsUnchanged": true
     },
     "privacy": "Token/path/staged-index canaries passed; CSS included in publication scan.",
-    "retainedFailureFix": "Real browser validation exposed the original shop result display remaining alive after payment; safe guards now require the hidden h=0 selector and stable turn, with both-player item cases covered."
+    "retainedFailureFix": "Real browser validation exposed the original shop result display remaining alive after payment; safe guards now require the hidden h=0 selector and stable turn, with both-player item cases covered.",
+    "standalone": {
+      "pass": true,
+      "candidateSourceCommit": "e36a2091dda62ab150ecf11688355f5ceb5d6a94",
+      "candidateZIP_SHA256": "a12d0cb09c5a1fe8151d133843c1e9c88aa6fea77df3d3831737ed5abfe2eaab",
+      "files": 199,
+      "runtimeFiles": 189,
+      "runtimePayloadSHA256": "183ea24e7677f1aa97f75df08dbd74297a4ef7f0678d91676252ae880b170c16",
+      "server": "included Windows PowerShell loopback server",
+      "systemOnlyPATH": true,
+      "nodeVisible": false,
+      "javaVisible": false,
+      "liveBrowserChecksPassed": 32,
+      "scope": "Actual detached ZIP; final package runtime is matched by payload digest, while documentation/manifest identify the final commit."
+    }
   }
 }
