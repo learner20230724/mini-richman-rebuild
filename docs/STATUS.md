@@ -1,9 +1,44 @@
 # Delivery status / 交付状态
 
-Updated 2026-10-23, Asia/Shanghai. **v0.3.0 live-customization update; not a claim of
+Updated 2026-10-23, Asia/Shanghai. **v0.3.1 uninterrupted-editing update; not a claim of
 native-Flash or full-pixel equivalence.** [Verification summary](VERIFICATION.json)
 
-## v0.3.0 scope / 本轮更新范围
+## v0.3.1 scope / 本轮更新范围
+
+- Removed automatic editor pause and the pause-while-editing option entirely.
+  Opening F2, editing fields and closing settings do not change speed, stop timers,
+  interrupt movement or suspend an event already in progress.
+- User-selected 0× and the explicit pause control still stop gameplay. Closing
+  settings does not undo that choice. Hidden-page protection still prevents
+  background time accumulation and catch-up on return.
+- Editor input remains isolated from game keys. Click the canvas to roll or
+  answer a dialog with the panel open; closing restores canvas focus. Input focus
+  does not stop the simulation clock.
+- Existing live-application, safe transaction queues, presets and 0–20× target
+  speed remain. This revision removes an unwanted pause behavior; it is not a
+  20× performance optimization or a claim to fix every freeze/crash.
+
+本轮改动是取消用户已确认的编辑自动暂停，不应描述为已修复所有卡死。本轮验收如下；后续历史章节的数据属于旧版本。
+
+This removes the user-confirmed automatic editor pause. Current checks are below;
+older version sections remain historical evidence.
+
+## v0.3.1 verification / 本轮验收
+
+- 278 unit tests passed; three original-default headless journeys again completed
+  in 463/465/456 rolls. Regeneration preserved 12 handwritten files and unchanged
+  generated outputs.
+- 139 browser checks passed: 18 original flow, 6 additional screens, 13 controls,
+  33 editor, 32 live-update and 37 dedicated keep-playing checks.
+- Actual F2 during the original 1× countdown continued into the board. A real
+  six-cell move completed with settings open while 2×/5×/20× and the pointer
+  speed slider were used. Rendering heartbeats remained responsive.
+- Numeric speed Enter applied without blur; manual 0× and explicit Continue
+  remained effective across F2 open/close. There is no editor-pause control/API.
+- This addresses the confirmed automatic-pause behavior. It is not a claim of
+  solving every performance or unsafe advanced-source-number problem.
+
+## Historical v0.3.0 scope / v0.3.0 历史更新范围
 
 - Valid field changes apply to the current game by default on blur/Enter.
   The primary action is "立即应用本局" (apply now), not restart. Explicit saving
@@ -22,7 +57,7 @@ native-Flash or full-pixel equivalence.** [Verification summary](VERIFICATION.js
   They require explicit application even when field auto-apply is enabled.
 - The six-page editor, current-match sandbox, and 0–20× target speed are retained.
 
-## v0.3.0 validation / 本轮验收
+## Historical v0.3.0 validation / v0.3.0 历史验收
 
 - 278 unit tests passed, including live-state/resource preservation, proportional
   timers, transactional queues, and all supported shop settlement cases.
@@ -38,13 +73,13 @@ native-Flash or full-pixel equivalence.** [Verification summary](VERIFICATION.js
 - Browser validation found and fixed an original shop-result-display edge case:
   a completed hidden h=0 selector no longer blocks later live edits forever.
 
-下面 v0.2.0 与 v0.1.1 的数据为历史记录，不用于代替本轮验收。
+下面 v0.2.0 与 v0.1.1 的数据也为历史记录。
 
 - An actual detached v0.3.0 ZIP passed all 32 live-update browser checks using
   its included Windows PowerShell server with Node/Java absent from PATH.
   The final tagged runtime is matched to that tested payload by digest.
   Package hashes and candidate commit are recorded in VERIFICATION.json.
-- Approximate current storage: 10.1 MB tracked source (including 1.8 MB runtime
+- At v0.3.0, approximate storage: 10.1 MB tracked source (including 1.8 MB runtime
   asset files), 3.1 MB ZIP / 5.6 MB extracted. Decimal values, not additive.
 
 The v0.2.0/v0.1.1 records below are historical.

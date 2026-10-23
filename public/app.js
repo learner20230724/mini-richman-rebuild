@@ -1,6 +1,6 @@
 (async function(){
   const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),assets=new Map();
-  let game,clock,editorPaused=false;
+  let game,clock;
   const warnings=[];
   const fail=error=>{const panel=document.getElementById('error');panel.style.display='block';panel.textContent='运行错误 / Runtime error\n'+error.stack;};
   try{
@@ -34,8 +34,7 @@
       store,defaults:RichmanDefaults,getGame:()=>game,
       getSpeed:()=>clock.speed,
       setSpeed:value=>{clock.setSpeed(value,performance.now());return clock.speed;},
-      pauseEditor:paused=>{editorPaused=!!paused;clock.setHidden(document.hidden||editorPaused,performance.now());},
-      stepOnce:()=>{if(document.hidden)throw new Error('页面隐藏时不能单步');if(clock.speed!==0&&!editorPaused)throw new Error('请先暂停再单步');step(20);render();},
+      stepOnce:()=>{if(document.hidden)throw new Error('页面隐藏时不能单步');if(clock.speed!==0)throw new Error('请先将速度设为 0 或点击暂停，再单步');step(20);render();},
       apply:config=>{
         const candidate=createGame(config);
         live.cancel();store.replace(config);store.apply();game=candidate;window.richman=game;lastLiveResult=null;
@@ -47,7 +46,7 @@
       cancelPending:()=>{live.cancel();lastLiveResult=null;},
       previewLive:config=>live.preview(game,config),
       sandbox:(action,payload)=>{const result=sandbox.run(action,payload);render();return result;},
-      getStatus:()=>({...sandbox.snapshot(),turn:game.root.vars.shui,simulationTime:game.now,speed:clock.speed,paused:clock.speed===0||editorPaused||document.hidden,editorPaused,warnings:[...warnings],liveSettings:{pending:!!live.pending,reason:live.pending?.reason||'',lastResult:lastLiveResult,request:live.pending}})
+      getStatus:()=>({...sandbox.snapshot(),turn:game.root.vars.shui,simulationTime:game.now,speed:clock.speed,paused:clock.speed===0||document.hidden,editorPaused:false,warnings:[...warnings],liveSettings:{pending:!!live.pending,reason:live.pending?.reason||'',lastResult:lastLiveResult,request:live.pending}})
     };
     window.richmanControls=adapter;
     function draw(clip){
@@ -86,13 +85,13 @@
     function frame(now){
       try{live.flush(game);clock.frame(now);live.flush(game);if(!document.hidden)render();requestAnimationFrame(frame);}catch(e){fail(e);}
     }
-    document.addEventListener('visibilitychange',()=>clock.setHidden(document.hidden||editorPaused,performance.now()));
+    document.addEventListener('visibilitychange',()=>clock.setHidden(document.hidden,performance.now()));
     clock.setHidden(document.hidden,performance.now());
     window.richmanEditor=new RichmanEditor(adapter);
     window.addEventListener('keydown',event=>{
       if(event.altKey&&event.key==='Enter'){event.preventDefault();if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen();return;}
       if(event.defaultPrevented||event.target?.closest?.('input,textarea,select,button,[contenteditable=\"true\"]'))return;
-      if(clock.speed===0||editorPaused||document.hidden)return;
+      if(clock.speed===0||document.hidden)return;
       const codes={a:65,d:68,w:87,s:83,ArrowLeft:37,ArrowRight:39,ArrowUp:38,ArrowDown:40,'0':48,'1':49,'2':50};
       const code=codes[event.key]??codes[event.key.toLowerCase()];if(code){event.preventDefault();if(!event.repeat)try{game.keyDown(code);live.flush(game);render();}catch(e){fail(e);}}
     });

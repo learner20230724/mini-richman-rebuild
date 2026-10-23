@@ -19,6 +19,7 @@
 .rm-editor-inline{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .rm-editor-speed{padding:10px 12px;border-bottom:1px solid var(--rm-editor-line)}
 .rm-editor-playback-status{display:block;font-size:12px;color:var(--rm-editor-accent);margin-bottom:5px}
+.rm-editor-speed-hint{margin:5px 0;font-size:11px}
 .rm-editor-speed-inputs{display:flex;align-items:center;gap:8px;margin-bottom:7px}
 .rm-editor-speed-inputs input[type=range]{flex:1;min-width:60px;accent-color:var(--rm-editor-accent);height:25px;padding:0;background:none;border:0}
 #rm-editor-panel input[data-speed-number]{width:70px;flex:0 0 70px}

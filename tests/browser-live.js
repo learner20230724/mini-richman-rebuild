@@ -1,12 +1,14 @@
 /* Playwright CLI run-code helper; root opens the built game's loopback page.
  * Real DOM changes / blur commits, real menu and keyboard transactions.
  * Explicit fixtures: queued dice outcomes; later position/turn arrangements;
- * property ownership via the public sandbox. Never reconstructs a game to make
- * a transaction pass. This is not native Flash differential/full-game proof.
+ * property ownership via the public sandbox; explicit manual 0x pauses solely
+ * for exact-state/timer-phase assertions. F2 itself must never pause the game.
+ * Never reconstructs a game to make a transaction pass. This is not native
+ * Flash differential/full-game proof; browser-playback covers running editing.
  */
 async(page)=>{
   const checks=[],errors=[],dialogs=[];
-  let report,dialogPolicy='accept';
+  let report,dialogPolicy='accept',fixtureResumeSpeed=20;
   const onError=error=>errors.push(String(error));
   const onDialog=dialog=>{dialogs.push({type:dialog.type(),message:dialog.message()});return dialogPolicy==='dismiss'?dialog.dismiss():dialog.accept();};
   page.on('pageerror',onError);page.on('dialog',onDialog);
@@ -14,8 +16,18 @@ async(page)=>{
   const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
   const ready=()=>page.waitForFunction(()=>!!window.richman&&!!window.richmanControls&&!!window.richmanEditor);
   const opened=()=>page.evaluate(()=>richmanEditor.opened);
-  async function open(){if(!await opened())await page.keyboard.press('F2');await page.waitForFunction(()=>richmanEditor.opened&&richmanControls.getStatus().editorPaused);}
-  async function close(){if(await opened())await page.keyboard.press('F2');await page.locator('#game').focus();}
+  async function open(){
+    // Explicit test-user pause, not an editor-open side effect: exact snapshots
+    // need a stopped clock while browser-playback separately verifies live F2.
+    const current=await page.evaluate(()=>richmanControls.getSpeed());if(current>0)fixtureResumeSpeed=current;
+    await page.evaluate(()=>richmanControls.setSpeed(0));
+    if(!await opened())await page.keyboard.press('F2');await page.waitForFunction(()=>richmanEditor.opened);
+  }
+  async function close(speed=fixtureResumeSpeed){
+    if(await opened())await page.keyboard.press('F2');
+    fixtureResumeSpeed=speed;await page.evaluate(speed=>richmanControls.setSpeed(speed),speed);
+    await page.locator('#game').focus();
+  }
   async function tab(name){await open();await page.locator('[data-tab="'+name+'"]').click();}
   async function commit(key,value){
     // DOM paths include the numbers group; readable fixture callers use rules.*.
@@ -39,8 +51,8 @@ async(page)=>{
     },{player,x,y});
   }
   async function dice(player,face=1){
-    await page.evaluate(face=>{richman.randomQueue=[(face-0.5)/6];richmanControls.setSpeed(20);},face);
-    await close();await page.keyboard.press(player===1?'w':'ArrowUp');
+    await page.evaluate(face=>{richman.randomQueue=[(face-0.5)/6];},face);
+    await close(20);await page.keyboard.press(player===1?'w':'ArrowUp');
   }
   async function sandboxProperty(id,owner,level){
     await open();await stable();
@@ -105,8 +117,8 @@ async(page)=>{
 
     // Start a real three-cell move, pause after ~200 simulated milliseconds,
     // then change only the named period. Verify timer phase and no new roll.
-    await arrange(1,254,1);await page.evaluate(()=>{richmanControls.setSpeed(1);richman.randomQueue=[2.5/6];});
-    await close();await page.keyboard.press('w');
+    await arrange(1,254,1);await page.evaluate(()=>{richman.randomQueue=[2.5/6];});
+    await close(1);await page.keyboard.press('w');
     await page.waitForFunction(()=>{
       const timer=[...richman.timers].find(([id])=>id!==richman.root.vars.shijian)?.[1];
       return richman.root.vars.xingqi===0&&timer&&timer.next-richman.now<=500&&timer.next-richman.now>100;
@@ -122,7 +134,7 @@ async(page)=>{
     },movingBefore.id);
     check('moving 700-to-1400 ms edit preserves remaining timer progress',movingAfter.sameGame&&movingBefore.ms===700&&movingAfter.ms===1400&&Math.abs(movingAfter.remaining-movingBefore.remaining*2)<0.001,{movingBefore,movingAfter});
     check('movement timing update never jumps a cell, rerolls, resets time or changes turn',movingAfter.now===movingBefore.now&&same(movingAfter.position,movingBefore.position)&&movingAfter.dice===movingBefore.dice&&same(movingAfter.random,movingBefore.random)&&movingAfter.turn===movingBefore.turn,{movingBefore,movingAfter});
-    await page.evaluate(()=>richmanControls.setSpeed(20));await close();
+    await close(20);
     await page.waitForFunction(()=>richman.root.named.jianfang?.alive===true);await page.keyboard.press('s');
     // Original b6 owns mines: declining a house offers planting a mine next.
     // Decline that real second dialog instead of changing inventory or rules.
@@ -162,12 +174,12 @@ async(page)=>{
       await speedInput.fill(String(value));await speedInput.press('Tab');
       check('live-update editor retains real '+value+'x speed control',await page.evaluate(value=>richmanControls.getSpeed()===value,value));
     }
-    await page.locator('[data-speed="0"]').click();await close();
+    await page.locator('[data-speed="0"]').click();await close(0);
     const pausedTime=await page.evaluate(()=>richman.now);await page.keyboard.press('w');await page.waitForTimeout(120);
     check('0x still freezes time and gameplay keys after live updates',await page.evaluate(time=>richman.now===time,pausedTime));
     check('all automatic and explicit live applications ran without confirmation',dialogs.filter(dialog=>dialog.type==='confirm').length===1,dialogs);
     check('live update verification has no browser/runtime errors',errors.length===0&&await page.evaluate(()=>richman.errors.length===0&&!document.querySelector('#error').textContent),errors);
-    report={pass:true,checks,browserErrors:errors,dialogs,fixtureScope:'Real editor change/blur controls, menu and original keyboard transactions. Later controlled turn/position and public-sandbox ownership fixtures; seeded dice only. No game reconstruction during assertions; not native Flash differential/full-game proof.'};
+    report={pass:true,checks,browserErrors:errors,dialogs,fixtureScope:'Real editor change/blur controls, menu and original keyboard transactions. Exact-state assertions explicitly use manual user 0x pauses, never an F2 editor pause; browser-playback independently tests editing while running. Later controlled turn/position, public-sandbox ownership and seeded-dice fixtures. No game reconstruction during assertions; not native Flash differential/full-game proof.'};
     return report;
   }catch(error){
     let runtimeState;

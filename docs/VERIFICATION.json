@@ -3735,5 +3735,464 @@
       "liveBrowserChecksPassed": 32,
       "scope": "Actual detached ZIP; final package runtime is matched by payload digest, while documentation/manifest identify the final commit."
     }
+  },
+  "keepPlayingV031": {
+    "phase": "source verified; standalone verification follows before publication",
+    "rootCause": "Settings opened with an independent automatic pause; changing playback speed did not release it. The user confirmed a responsive panel and resumption on close. This revision removes that behavior, not a claim of fixing arbitrary browser hangs.",
+    "unitTestsPassed": 278,
+    "unitTestsFailed": 0,
+    "sourceBrowserChecksPassed": 139,
+    "sourceBrowser": {
+      "baseFlow": 18,
+      "additionalScreens": 6,
+      "controls": 13,
+      "editor": {
+        "pass": true,
+        "checksPassed": 33,
+        "checks": [
+          {
+            "name": "editor defaults preserve original rules",
+            "pass": true
+          },
+          {
+            "name": "1x advances original fixed-step simulation in real wall time",
+            "pass": true
+          },
+          {
+            "name": "20x target advances faster without changing original tick length",
+            "pass": true
+          },
+          {
+            "name": "0x freezes simulation and game keyboard input",
+            "pass": true
+          },
+          {
+            "name": "paused manual step advances exactly one original 20 ms tick",
+            "pass": true
+          },
+          {
+            "name": "opening and closing the editor preserves explicit user 0x pause",
+            "pass": true
+          },
+          {
+            "name": "opening F2 editor leaves a 1x game running without changing target speed",
+            "pass": true
+          },
+          {
+            "name": "F2 opens the real editor panel",
+            "pass": true
+          },
+          {
+            "name": "editor has no automatic editing-pause control",
+            "pass": true
+          },
+          {
+            "name": "single step is disabled and rejected until explicit user 0x pause",
+            "pass": true
+          },
+          {
+            "name": "editor reserves non-overlapping 4:3 game space 1280x720",
+            "pass": true
+          },
+          {
+            "name": "editor reserves non-overlapping 4:3 game space 600x450",
+            "pass": true
+          },
+          {
+            "name": "typing W/A/D/S into an editor input never reaches a running game",
+            "pass": true
+          },
+          {
+            "name": "draft undo restores the previous edit without applying",
+            "pass": true
+          },
+          {
+            "name": "12000 cash and 37/0 land prices remain an unapplied draft",
+            "pass": true
+          },
+          {
+            "name": "explicit restart creates a fresh menu with the selected active rules",
+            "pass": true
+          },
+          {
+            "name": "real keyboard starts configured b6/b2 game",
+            "pass": true
+          },
+          {
+            "name": "configured land price appears in the real original purchase popup",
+            "pass": true
+          },
+          {
+            "name": "configured purchase actually debits 37 cash and 0 diamonds for the whole band",
+            "pass": true
+          },
+          {
+            "name": "explicit sandbox UI changes live cash without changing active or draft rules",
+            "pass": true
+          },
+          {
+            "name": "explicit sandbox property UI updates ownership, building display and statistics coherently",
+            "pass": true
+          },
+          {
+            "name": "explicit save writes applied rules rather than game progress",
+            "pass": true
+          },
+          {
+            "name": "saved rules reload into a fresh game, not a saved in-progress match",
+            "pass": true
+          },
+          {
+            "name": "named preset saves only draft rules and does not apply them",
+            "pass": true
+          },
+          {
+            "name": "loading a named preset replaces only the draft",
+            "pass": true
+          },
+          {
+            "name": "JSON export downloads the actual unapplied draft",
+            "pass": true
+          },
+          {
+            "name": "invalid JSON import is rejected atomically without partial draft or active changes",
+            "pass": true
+          },
+          {
+            "name": "valid JSON import replaces only the draft and does not apply or save",
+            "pass": true
+          },
+          {
+            "name": "named preset deletion does not modify the current game",
+            "pass": true
+          },
+          {
+            "name": "restoring original defaults resets only the draft until apply",
+            "pass": true
+          },
+          {
+            "name": "explicitly restarting with restored defaults returns active rules to original",
+            "pass": true
+          },
+          {
+            "name": "verification finishes with clean original configuration and default 1x",
+            "pass": true
+          },
+          {
+            "name": "no game or browser errors during editor verification",
+            "pass": true
+          }
+        ],
+        "scope": "Real editor controls, keyboard and wall-clock pacing; not native Flash differential or rendered full-game completion."
+      },
+      "live": {
+        "pass": true,
+        "checksPassed": 32,
+        "checks": [
+          {
+            "name": "live verification starts with unchanged original rules",
+            "pass": true
+          },
+          {
+            "name": "real keyboard selects b6/b2 before any live update",
+            "pass": true
+          },
+          {
+            "name": "automatic change commit defaults to enabled",
+            "pass": true
+          },
+          {
+            "name": "blur-committed character edits update the live selected player without replacing the game",
+            "pass": true
+          },
+          {
+            "name": "live character updates preserve board frame, clock, positions, turn and ownership",
+            "pass": true
+          },
+          {
+            "name": "automatic live apply does not show a restart confirmation",
+            "pass": true
+          },
+          {
+            "name": "global house-cost edit does not restore character starting cash or restart",
+            "pass": true
+          },
+          {
+            "name": "37/0 property price is applied on the existing board before the first roll",
+            "pass": true
+          },
+          {
+            "name": "live property price appears in the original purchase popup",
+            "pass": true
+          },
+          {
+            "name": "real keyboard purchase debits 37/0 and grants the complete original band",
+            "pass": true
+          },
+          {
+            "name": "live bank bonus is used by the next original bank-crossing action",
+            "pass": true
+          },
+          {
+            "name": "later unrelated changes preserve already earned and spent cash",
+            "pass": true
+          },
+          {
+            "name": "next real house purchase uses hot-updated 322 cost",
+            "pass": true
+          },
+          {
+            "name": "next original rent event uses hot-updated rent and live owner tax",
+            "pass": true
+          },
+          {
+            "name": "next real corner-shop purchase uses hot-updated item cost",
+            "pass": true
+          },
+          {
+            "name": "moving 700-to-1400 ms edit preserves remaining timer progress",
+            "pass": true
+          },
+          {
+            "name": "movement timing update never jumps a cell, rerolls, resets time or changes turn",
+            "pass": true
+          },
+          {
+            "name": "popup edits show pending safe-point status instead of replacing transaction values",
+            "pass": true
+          },
+          {
+            "name": "queued full candidate is a draft while active rules remain the old complete set",
+            "pass": true
+          },
+          {
+            "name": "queueing leaves popup scene, clock, positions and turn intact",
+            "pass": true
+          },
+          {
+            "name": "current purchase settles with old 300 cash / 1 diamond before queued rules apply",
+            "pass": true
+          },
+          {
+            "name": "safe-point promotion atomically aligns active, board prices, global rule and UI status",
+            "pass": true
+          },
+          {
+            "name": "next actual purchase uses newly promoted 73 cash / 0 diamond rules",
+            "pass": true
+          },
+          {
+            "name": "explicit live Apply neither confirms nor rebuilds an already running board",
+            "pass": true
+          },
+          {
+            "name": "manual restart is separate and still asks for confirmation",
+            "pass": true
+          },
+          {
+            "name": "live-update editor retains real 0x speed control",
+            "pass": true
+          },
+          {
+            "name": "live-update editor retains real 0.1x speed control",
+            "pass": true
+          },
+          {
+            "name": "live-update editor retains real 1x speed control",
+            "pass": true
+          },
+          {
+            "name": "live-update editor retains real 20x speed control",
+            "pass": true
+          },
+          {
+            "name": "0x still freezes time and gameplay keys after live updates",
+            "pass": true
+          },
+          {
+            "name": "all automatic and explicit live applications ran without confirmation",
+            "pass": true
+          },
+          {
+            "name": "live update verification has no browser/runtime errors",
+            "pass": true
+          }
+        ],
+        "scope": "Real editor change/blur controls, menu and original keyboard transactions. Exact-state assertions explicitly use manual user 0x pauses, never an F2 editor pause; browser-playback independently tests editing while running. Later controlled turn/position, public-sandbox ownership and seeded-dice fixtures. No game reconstruction during assertions; not native Flash differential/full-game proof."
+      },
+      "playback": {
+        "pass": true,
+        "checksPassed": 37,
+        "checks": [
+          {
+            "name": "game starts at original 1x without editor-pause machinery",
+            "pass": true
+          },
+          {
+            "name": "real keyboard starts the original two-second selection countdown",
+            "pass": true
+          },
+          {
+            "name": "opening F2 at 1x does not change user speed or mark playback paused",
+            "pass": true
+          },
+          {
+            "name": "menu countdown clock continues while settings stay open",
+            "pass": true
+          },
+          {
+            "name": "actual countdown ticks decrease while editing",
+            "pass": true
+          },
+          {
+            "name": "1x countdown enters the board with F2 still open and original selected roles",
+            "pass": true
+          },
+          {
+            "name": "editing never exposes the removed editor-pause checkbox",
+            "pass": true
+          },
+          {
+            "name": "numeric 2 Enter commits speed immediately without blurring",
+            "pass": true
+          },
+          {
+            "name": "numeric Enter speed advances while focus remains inside settings",
+            "pass": true
+          },
+          {
+            "name": "numeric 0 Enter immediately produces a real manual pause",
+            "pass": true
+          },
+          {
+            "name": "numeric 2 Enter immediately resumes the paused game",
+            "pass": true
+          },
+          {
+            "name": "numeric 2 Enter actually restores simulation progress",
+            "pass": true
+          },
+          {
+            "name": "numeric 20 Enter immediately resumes the paused game",
+            "pass": true
+          },
+          {
+            "name": "numeric 20 Enter actually restores simulation progress",
+            "pass": true
+          },
+          {
+            "name": "real dice starts movement while settings remain visible",
+            "pass": true
+          },
+          {
+            "name": "closing and reopening F2 during movement preserves active turn, game and speed",
+            "pass": true
+          },
+          {
+            "name": "UI 2x changes only user pacing while dock stays open",
+            "pass": true
+          },
+          {
+            "name": "simulation and animation heartbeat continue at 2x",
+            "pass": true
+          },
+          {
+            "name": "UI 5x changes only user pacing while dock stays open",
+            "pass": true
+          },
+          {
+            "name": "simulation and animation heartbeat continue at 5x",
+            "pass": true
+          },
+          {
+            "name": "UI 20x changes only user pacing while dock stays open",
+            "pass": true
+          },
+          {
+            "name": "simulation and animation heartbeat continue at 20x",
+            "pass": true
+          },
+          {
+            "name": "continuous speed-slider changes keep the page, clock and current game alive",
+            "pass": true
+          },
+          {
+            "name": "unpaused dock reaches the original six-step corner without rerolling or losing the turn",
+            "pass": true
+          },
+          {
+            "name": "closing running settings retains 20x, corner-shop scene, position and unpaid resources",
+            "pass": true
+          },
+          {
+            "name": "closed game continues running at the selected 20x",
+            "pass": true
+          },
+          {
+            "name": "explicit UI 0x manually pauses while settings stay open",
+            "pass": true
+          },
+          {
+            "name": "closing settings cannot undo the user-selected 0x pause",
+            "pass": true
+          },
+          {
+            "name": "reopening settings also preserves manual 0x and exact scene state",
+            "pass": true
+          },
+          {
+            "name": "manual pause renders an explicit Continue action",
+            "pass": true
+          },
+          {
+            "name": "clicking Continue restores prior positive 20x without closing settings",
+            "pass": true
+          },
+          {
+            "name": "Continue actually resumes game time and rendered heartbeat",
+            "pass": true
+          },
+          {
+            "name": "compact Pause is a real user-selected 0x",
+            "pass": true
+          },
+          {
+            "name": "compact Resume restores a live responsive game",
+            "pass": true
+          },
+          {
+            "name": "rendered heartbeat responds within deadline after repeated F2 and slider input",
+            "pass": true
+          },
+          {
+            "name": "playback interactions never require a confirmation dialog",
+            "pass": true
+          },
+          {
+            "name": "playback regression has no browser or runtime exceptions",
+            "pass": true
+          }
+        ],
+        "scope": "Real 1x menu, F2, keyboard movement, speed buttons, pointer slider, explicit manual 0x pause/Continue and rendered heartbeats. Only a six-face dice result is controlled; no position/resource/turn injection or editor-pause mechanism. Not native Flash differential/full-game proof."
+      }
+    },
+    "naturalJourneys": {
+      "seeds": [
+        5976,
+        42,
+        123456
+      ],
+      "rolls": [
+        463,
+        465,
+        456
+      ],
+      "passed": 3
+    },
+    "regeneration": {
+      "pass": true,
+      "humanFilesPreserved": 12,
+      "generatedUnchanged": true
+    }
   }
 }

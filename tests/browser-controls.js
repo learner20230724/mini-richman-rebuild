@@ -2,8 +2,14 @@
 async(page)=>{
   const checks=[],check=(name,pass,detail)=>{checks.push({name,pass:!!pass,detail});if(!pass)throw new Error(name+': '+JSON.stringify(detail));};
   await page.reload();await page.waitForFunction(()=>!!window.richmanEditor);
+  const beforeOpen=await page.evaluate(()=>({time:richman.now,speed:richmanControls.getSpeed()}));
   await page.getByRole('button',{name:'⚙ 设置',exact:true}).click();
+  await page.waitForTimeout(150);
+  check('mouse-opening editor never pauses game time or changes desired speed',await page.evaluate(before=>richman.now>before.time&&richmanControls.getSpeed()===before.speed&&!richmanControls.getStatus().paused,beforeOpen),beforeOpen);
+  const beforeClose=await page.evaluate(()=>richman.now);
   await page.getByRole('button',{name:'关闭 · Esc',exact:true}).click();
+  await page.waitForTimeout(100);
+  check('closing editor keeps the running simulation and desired speed unchanged',await page.evaluate(before=>richman.now>before&&richmanControls.getSpeed()===1&&!richmanControls.getStatus().paused,beforeClose));
   check('mouse-opened editor returns focus to game',await page.locator('#game').evaluate(e=>document.activeElement===e));
   await page.keyboard.press('d');check('keyboard works immediately after mouse editor close',await page.evaluate(()=>richman.root.named.p1.proxy._x===190));
   await page.locator('.rm-editor-compact-speed').click();const before=await page.evaluate(()=>richman.now);

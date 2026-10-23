@@ -155,7 +155,7 @@
       this.lastDisplayedPending = pending;
       let text;
       if (this.liveApplying) text = '正在提交本局配置…';
-      else if (pending) text = '等待安全点，本次配置尚未生效：' + (live.reason || '当前操作需要先结束。') + ' 关闭设置，或取消“编辑时暂停”继续完成移动 / 弹窗，安全后自动生效。';
+      else if (pending) text = '等待安全点，本次配置尚未生效：' + (live.reason || '当前操作需要先结束。') + ' 完成当前移动 / 弹窗后自动生效；手动设为 0 倍暂停时请先继续游戏。';
       else if (live.deferred || live.lastResult?.deferred) text = '本局配置已更新；部分源数字仅在后续读取或重新开局生效。';
       else text = '本局即时应用保留位置、回合和未修改的资源；存储仍需单独保存。';
       this.liveStatus.textContent = text; this.liveStatus.dataset.pending = String(pending); this.liveStatus.classList.toggle('rm-editor-pending', pending);
@@ -201,6 +201,9 @@
       this.speedNumber = this.node('input'); this.speedNumber.type = 'number'; this.speedNumber.min = '0'; this.speedNumber.max = '20'; this.speedNumber.step = '0.1'; this.speedNumber.setAttribute('aria-label', '游戏速度倍数'); this.speedNumber.dataset.speedNumber = 'true';
       this.speedRange.addEventListener('input', () => this.action(() => this.setSpeed(numberValue(this.speedRange.value))));
       this.speedNumber.addEventListener('change', () => this.action(() => this.setSpeed(numberValue(this.speedNumber.value))));
+      this.speedNumber.addEventListener('keydown', event => {
+        if (event.key === 'Enter' && !event.isComposing) { event.preventDefault(); this.action(() => this.setSpeed(numberValue(this.speedNumber.value))); }
+      });
       speedInputs.append(this.speedRange, this.speedNumber, this.node('span', '', '倍')); speed.appendChild(speedInputs);
       const shortcuts = this.node('div', 'rm-editor-inline rm-editor-speed-shortcuts');
       for (const multiplier of [0, 1, 2, 5, 10, 20]) {
@@ -209,9 +212,7 @@
       this.pauseButton = this.button('暂停', () => this.setSpeed(this.adapter.getSpeed() === 0 ? this.previousSpeed : 0)); this.pauseButton.dataset.pauseSpeed = 'true';
       this.stepButton = this.button('单步 · 20ms', () => { this.adapter.stepOnce(); this.refreshPlayback(); }); this.stepButton.dataset.singleStep = 'true';
       shortcuts.append(this.pauseButton, this.stepButton); speed.appendChild(shortcuts);
-      this.pauseCheck = this.node('input'); this.pauseCheck.type = 'checkbox'; this.pauseCheck.checked = true; this.pauseCheck.dataset.pauseEditor = 'true';
-      this.pauseCheck.addEventListener('change', () => this.action(() => { this.adapter.pauseEditor(this.opened && this.pauseCheck.checked); this.refreshPlayback(); }));
-      const pauseLabel = this.label('编辑时暂停（独立于倍速；关闭设置后解除）', this.pauseCheck); pauseLabel.classList.add('rm-editor-checkbox'); speed.appendChild(pauseLabel);
+      speed.appendChild(this.note('调速即刻生效，0 倍暂停。点击棋盘可继续键盘操作。', 'rm-editor-speed-hint'));
       this.autoApplyCheck = this.node('input'); this.autoApplyCheck.type = 'checkbox'; this.autoApplyCheck.checked = true; this.autoApplyCheck.dataset.autoApply = 'true';
       this.autoApplyCheck.addEventListener('change', () => { this.refreshState(); });
       const autoLabel = this.label('修改后自动应用本局（不自动保存）', this.autoApplyCheck); autoLabel.classList.add('rm-editor-checkbox'); speed.appendChild(autoLabel);
@@ -333,13 +334,12 @@
       if (this.disposed) return;
       const speed = Number(this.adapter.getSpeed()), status = this.adapter.getStatus ? this.adapter.getStatus() : {};
       if (speed > 0) this.previousSpeed = speed;
-      const editorPaused = this.opened && this.pauseCheck.checked;
-      this.playbackStatus.textContent = (editorPaused ? '编辑暂停' : speed === 0 ? '速度暂停' : '运行中') + ' · 用户速度 ' + speed.toFixed(1).replace(/\.0$/, '') + '×';
+      this.playbackStatus.textContent = speed === 0 ? '已手动暂停 · 0×' : '运行中 · ' + speed.toFixed(1).replace(/\.0$/, '') + '×';
       this.compactSpeed.textContent = speed === 0 ? '▶ 恢复' : speed.toFixed(1).replace(/\.0$/, '') + '× Ⅱ';
-      this.pauseButton.textContent = speed === 0 ? '恢复 ' + this.previousSpeed + '×' : '速度暂停';
+      this.pauseButton.textContent = speed === 0 ? '继续 ' + this.previousSpeed + '×' : '暂停';
       if (this.doc.activeElement !== this.speedNumber) this.speedNumber.value = String(speed);
       this.speedRange.value = String(speed);
-      this.stepButton.disabled = !(editorPaused || speed === 0 || status.paused);
+      this.stepButton.disabled = speed !== 0;
       this.panel.dataset.userSpeed = String(speed);
       this.refreshState(status); this.refreshFields();
     }
@@ -348,7 +348,7 @@
       this.previousFocus = this.doc.activeElement;
       this.opened = true; this.overlay.hidden = false; this.entry.hidden = true;
       this.doc.body.classList.add('richman-editor-open'); this.gear.setAttribute('aria-expanded', 'true');
-      this.adapter.pauseEditor(this.pauseCheck.checked); this.refreshPlayback(); this.render(); this.panel.focus();
+      this.refreshPlayback(); this.render(); this.panel.focus();
       this.win.dispatchEvent(new this.win.Event('resize'));
     }
     close(commitPending = true) {
@@ -356,7 +356,7 @@
       if (commitPending) this.action(() => this.commitAutoField());
       this.opened = false; this.overlay.hidden = true; this.entry.hidden = false;
       this.doc.body.classList.remove('richman-editor-open'); this.gear.setAttribute('aria-expanded', 'false');
-      this.adapter.pauseEditor(false); this.refreshPlayback();
+      this.refreshPlayback();
       const focus=this.previousFocus&&this.previousFocus.isConnected&&!this.previousFocus.closest?.('.rm-editor-entry,.rm-editor-overlay')?this.previousFocus:this.doc.getElementById('game')||this.gear;focus.focus();
       this.win.dispatchEvent(new this.win.Event('resize'));
     }

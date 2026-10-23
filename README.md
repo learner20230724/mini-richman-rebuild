@@ -15,7 +15,7 @@ A local two-player board game with seven characters, whole-band property purchas
 
 ## Configure
 
-Click the **gear** or press **F2** to open the six-page editor. Opening pauses the game by default; you can continue playing while the panel stays open. The panel occupies its own space rather than covering the game.
+Click the **gear** or press **F2** to open the six-page editor. Opening, editing and closing **do not pause the game or change its speed**. The panel occupies its own space rather than covering the game. Typing stays inside the editor; click the game canvas to roll or use gameplay keys again.
 
 - Adjust character values, property prices, construction/rent, shop items and timing **without restarting**. By default a valid field applies on blur/Enter; **立即应用本局 (apply now)** applies manually. Applying does not save to the browser.
 - Only changed character fields are synchronized to players using that character; other balances and positions stay intact. Prices/rules affect subsequent transactions; active transactions queue the complete update until safe. Paid costs are not recalculated.

@@ -39,17 +39,19 @@ async(page)=>{
     // This regression intentionally exercises the optional manual-draft mode.
     // Default automatic live application is verified separately.
     await page.locator('[data-auto-apply]').uncheck();
-    await page.waitForFunction(()=>richmanControls.getStatus().editorPaused===true);
     const beforeStep=await page.evaluate(()=>richman.now);await page.evaluate(()=>richmanControls.stepOnce());
     check('paused manual step advances exactly one original 20 ms tick',await page.evaluate(()=>richman.now)===beforeStep+20);
     await page.keyboard.press('F2');
-    check('closing editor does not clear user 0x pause',await page.evaluate(()=>richmanControls.getSpeed()===0&&!richmanControls.getStatus().editorPaused));
+    check('opening and closing the editor preserves explicit user 0x pause',await page.evaluate(()=>richmanControls.getSpeed()===0&&richmanControls.getStatus().paused));
     await page.evaluate(()=>richmanControls.setSpeed(1));await page.keyboard.press('F2');
-    await page.waitForFunction(()=>richmanControls.getStatus().editorPaused===true);
     const editorTime=await page.evaluate(()=>richman.now);await page.waitForTimeout(200);
-    check('F2 independently pauses a running game',await page.evaluate(()=>richman.now)===editorTime);
+    check('opening F2 editor leaves a 1x game running without changing target speed',await page.evaluate(before=>richman.now>before&&richmanControls.getSpeed()===1&&!richmanControls.getStatus().paused,editorTime));
     const panel=page.locator('#rm-editor-panel');
     check('F2 opens the real editor panel',await panel.isVisible());
+    check('editor has no automatic editing-pause control',await page.locator('[data-pause-editor]').count()===0);
+    check('single step is disabled and rejected until explicit user 0x pause',await page.locator('[data-single-step]').isDisabled()&&await page.evaluate(()=>{
+      const before=richman.now;try{richmanControls.stepOnce();return false;}catch{return richman.now===before&&richmanControls.getSpeed()===1;}
+    }));
     for(const [width,height]of [[1280,720],[600,450]]){
       await page.setViewportSize({width,height});await page.waitForTimeout(100);
       const canvas=await page.locator('#game').boundingBox(),editor=await panel.boundingBox();
@@ -63,15 +65,14 @@ async(page)=>{
     await page.setViewportSize({width:1280,height:720});
     await page.locator('[data-tab="characters"]').click();
     await page.locator('select[aria-label="选择角色"]').selectOption('b6');
-    // Turn off the editor's own pause so this proves keyboard isolation rather
-    // than relying accidentally on the fact that a paused game ignores input.
-    await page.locator('[data-pause-editor]').uncheck();
+    // The game keeps running throughout editing: input isolation must not rely
+    // on an automatic editor pause (there deliberately is no such feature).
     const menuBefore=await page.evaluate(()=>({x:richman.root.named.p1.proxy._x,selected:richman.root.vars.ppp1,frame:richman.root.frame}));
     const name=page.locator('input[data-field="characters.b6.name"]');
     await name.fill('');await name.pressSequentially('wads');
     const menuAfter=await page.evaluate(()=>({x:richman.root.named.p1.proxy._x,selected:richman.root.vars.ppp1,frame:richman.root.frame}));
     check('typing W/A/D/S into an editor input never reaches a running game',json(menuBefore)===json(menuAfter),{menuBefore,menuAfter});
-    await name.fill('小镁');await page.locator('[data-pause-editor]').check();
+    await name.fill('小镁');
     const activeBefore=json((await storeState()).active);
     const cash=page.locator('input[data-field="characters.b6.cash"]');
     await cash.fill('12000');await cash.fill('12100');await page.getByRole('button',{name:'撤销一项',exact:true}).click();
@@ -82,7 +83,8 @@ async(page)=>{
     await page.locator('input[data-field="properties.1.diamonds"]').fill('0');
     const drafted=await storeState();
     check('12000 cash and 37/0 land prices remain an unapplied draft',json(drafted.active)===activeBefore&&drafted.draft.characters.b6.cash===12000&&drafted.draft.properties['1'].cash===37&&drafted.draft.properties['1'].diamonds===0&&drafted.stats.draftChanged===3,drafted);
-    await page.locator('[data-restart-config]').click();
+    // Freeze explicitly for the exact fresh-game timestamp assertion only.
+    await page.evaluate(()=>richmanControls.setSpeed(0));await page.locator('[data-restart-config]').click();
     check('explicit restart creates a fresh menu with the selected active rules',await page.evaluate(()=>richman.root.frame===1&&richman.now===0&&richmanControls.store.active.characters.b6.cash===12000&&richmanControls.store.stats().draftChanged===0));
     await page.keyboard.press('F2');await page.locator('#game').focus();await page.evaluate(()=>richmanControls.setSpeed(20));
     for(let i=0;i<4;i++)await page.keyboard.press('d');
@@ -97,7 +99,7 @@ async(page)=>{
     const purchase=await page.evaluate(()=>({cash:richman.root.vars.xianjin1,diamonds:richman.root.vars.zuanshi1,owners:richman.root.vars.shuyu.slice(1,6),turn:richman.root.vars.shui}));
     check('configured purchase actually debits 37 cash and 0 diamonds for the whole band',purchase.cash===11963&&purchase.diamonds===3&&purchase.owners.every(owner=>owner===1)&&purchase.turn===2,purchase);
     await page.screenshot({path:'output/playwright/verified-editor-purchase.png'});
-    await page.keyboard.press('F2');await page.locator('[data-tab="sandbox"]').click();
+    await page.evaluate(()=>richmanControls.setSpeed(0));await page.keyboard.press('F2');await page.locator('[data-tab="sandbox"]').click();
     await page.waitForFunction(()=>richmanControls.getStatus().canEdit===true);
     await page.locator('select[aria-label="本局玩家"]').selectOption('1');
     await page.locator('input[data-sandbox-field="cash"]').fill('13000');

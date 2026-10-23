@@ -4,9 +4,13 @@
 
 ## 打开面板 / Open the editor
 
-点击齿轮或按 **F2**，按 **Esc** 关闭。宽窗口左右排列，窄窗口上下排列；游戏保持正确比例，面板不遮住棋盘。打开默认暂停；取消勾选**编辑时暂停**可保持面板打开继续游戏。编辑字段时，键盘不会同时控制游戏。关闭面板只解除编辑器自己的暂停，不会把用户设定的 0 倍改回 1 倍。
+点击齿轮或按 **F2**，按 **Esc** 关闭。宽窗口左右排列，窄窗口上下排列；游戏保持正确比例，面板不遮住棋盘。**打开、编辑、关闭都不暂停，也不改变当前速度**，移动、计时和已开始的事件继续推进。没有“编辑时暂停”开关；需要暂停时主动按暂停或设为 0 倍。若已经是 0 倍，关闭面板也不会自动恢复。
 
-Click the gear or press **F2**; **Esc** closes it. The game and editor sit side-by-side on wide screens and stack on narrow ones, without covering or stretching the board. Opening pauses by default; uncheck **编辑时暂停 (pause while editing)** to resume with the panel open. Typing in the panel does not control the game. Closing removes only the editor's pause, not a user-selected 0× speed.
+Click the gear or press **F2**; **Esc** closes it. The game and editor sit side-by-side on wide screens and stack on narrow ones, without covering or stretching the board. **Opening, editing and closing neither pause nor change speed**: movement, timers and started events continue. There is no pause-while-editing switch; pause explicitly or select 0× when wanted. Closing the editor never restores speed from a user-selected 0×.
+
+字段输入与游戏键盘隔离，避免输入名字或数值时误触掷骰。要在面板打开时操作游戏，点击游戏画布，再使用原来的游戏按键；这只切换输入焦点，不需要关闭面板，也不是恢复计时的按钮。
+
+Editor typing is isolated from gameplay keys, preventing accidental rolls while entering names or values. To control the game with the panel open, click the game canvas, then use the normal game keys. This changes input focus only: it does not require closing the panel or resume a stopped clock.
 
 六页按本作实际系统分类：**本局沙盒、角色、地产、建造租金、商店道具、时间 / 高级**。这里没有凭空添加兵种、僵尸、关卡或出怪波次。
 
@@ -46,9 +50,9 @@ Closing with Esc/F2 can also commit a valid ordinary field that has not blurred 
 | 骰子面数 / Dice faces | 下次掷骰使用新范围，当前点数与剩余步数不变。New range on the next roll; current roll and remaining steps stay unchanged. |
 | 高级源码数字 / Advanced source numbers | 风险确认后仅影响后续源码取值；已执行的初始化常量需新局，已有对象不重建。Future source reads only after risk confirmation; executed initialization requires a new game, and existing objects are not rebuilt. |
 
-若当前交易不适合中途换规则，整份配置等待安全时机再应用，不会一半旧规则、一半新规则。等待期间请查看提示；若游戏同时处于编辑暂停或 0 倍，需要解除相应暂停，让当前流程完成。已经排队不等于已经应用，也不等于已经保存。
+若当前交易不适合中途换规则，整份配置等待安全时机再应用，不会一半旧规则、一半新规则。面板保持打开时移动和事件仍会继续；需要回应弹窗时点击画布再操作。若主动设为 0 倍，需要恢复正倍速让计时流程完成。已经排队不等于已经应用，也不等于已经保存。
 
-If a transaction cannot safely change rules halfway through, the complete update waits for a safe point instead of applying a mixture. Check the pending status; release editor pause or user-selected 0× as needed so the current flow can finish. Queued is not applied, and neither means saved.
+If a transaction cannot safely change rules halfway through, the complete update waits for a safe point instead of applying a mixture. Movement and events continue while the editor stays open; click the canvas to answer a game dialog. If you explicitly chose 0×, restore a positive speed so timed actions can finish. Queued is not applied, and neither means saved.
 
 弹窗决策、已付款转盘和未结束的计时事务会等待旧规则结算；赌场/命运已经结算、仅保留结果画面时，不会无谓阻塞应用。移动中单独修改命名规则可以应用；若同一份修改还包含角色、地产价格或 `src.*`，则整份等待这次移动及落地事务完成。再次提交会替换尚未应用的整份请求；**取消待应用**保留草稿、本局不变。胜负已定后可更新供新局使用的配置，但不改变赢家或重放棋盘。
 
@@ -118,9 +122,9 @@ On Windows, `Start-Local-Game.cmd` uses fixed `http://127.0.0.1:18758/` so the n
 
 Speed changes keep repeated `game.step(20)` calls instead of passing a large delta or lowering original rule parameters. An unchanged 700 ms movement interval corresponds to about 35 ms of wall-clock time at a 20× target if the device keeps up. The setting is a target, not a guarantee of actual 20× performance.
 
-页面隐藏时暂停，不累计后台时间；恢复、切换速度和暂停时清除旧欠账。长时间卡顿也不会无限补跑。编辑器暂停与用户 0 倍相互独立。
+页面隐藏时暂停，不累计后台时间；恢复、切换速度和主动暂停时清除旧欠账。长时间卡顿也不会无限补跑。打开或关闭编辑器不改变暂停状态：暂停只来自用户的 0 倍/暂停操作或页面隐藏保护。
 
-Hidden pages do not accumulate time. Resuming, changing speed and pausing discard old timing debt; long stalls do not cause unbounded catch-up. Editor pause and user-selected 0× remain independent.
+Hidden pages do not accumulate time. Resuming, changing speed and explicit pause discard old timing debt; long stalls do not cause unbounded catch-up. Opening or closing the editor does not change pause state; only user-selected 0×/pause or hidden-page protection stops time.
 
 ## 参数范围与边界 / Parameter scope and limits
 
