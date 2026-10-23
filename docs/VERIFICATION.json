@@ -3737,7 +3737,7 @@
     }
   },
   "keepPlayingV031": {
-    "phase": "source verified; standalone verification follows before publication",
+    "phase": "source and detached portable runtime verified",
     "rootCause": "Settings opened with an independent automatic pause; changing playback speed did not release it. The user confirmed a responsive panel and resumption on close. This revision removes that behavior, not a claim of fixing arbitrary browser hangs.",
     "unitTestsPassed": 278,
     "unitTestsFailed": 0,
@@ -4193,6 +4193,20 @@
       "pass": true,
       "humanFilesPreserved": 12,
       "generatedUnchanged": true
+    },
+    "standalone": {
+      "pass": true,
+      "candidateSourceCommit": "1686a43ef8d3bafc51d05d5ee346cef2b0d20cdb",
+      "candidateZIP_SHA256": "b15439218561d438777130888b4a5e9af196fea006e0650aaf5f19a66166e420",
+      "files": 199,
+      "runtimeFiles": 189,
+      "runtimePayloadSHA256": "a4a911dbfabbc3153d3af9dba00c964656cca1d5979f765ce1a42da2e6d7b0c2",
+      "server": "included Windows PowerShell loopback server",
+      "systemOnlyPATH": true,
+      "nodeVisible": false,
+      "javaVisible": false,
+      "keepPlayingBrowserChecksPassed": 37,
+      "scope": "Actual detached ZIP; final runtime matched by payload digest while documentation and manifest identify final commit."
     }
   }
 }

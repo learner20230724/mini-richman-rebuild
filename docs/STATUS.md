@@ -35,6 +35,9 @@ older version sections remain historical evidence.
   speed slider were used. Rendering heartbeats remained responsive.
 - Numeric speed Enter applied without blur; manual 0× and explicit Continue
   remained effective across F2 open/close. There is no editor-pause control/API.
+- An actual detached ZIP passed all 37 keep-playing checks with its included
+  Windows PowerShell server and Node/Java absent from PATH. The final tagged
+  runtime is checked against that tested payload digest.
 - This addresses the confirmed automatic-pause behavior. It is not a claim of
   solving every performance or unsafe advanced-source-number problem.
 
