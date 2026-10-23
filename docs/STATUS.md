@@ -25,7 +25,7 @@ scope and safety limits.
 
 ## v0.2.0 source verification / 本轮源码验证
 
-- 227 unit tests passed (143 original + 84 new clock/configuration/sandbox tests).
+- 228 unit tests passed (143 original + 85 clock/configuration/sandbox and pacing tests).
 - The same three original-default headless journeys passed again: 463/465/456 rolls.
 - 18 original browser-flow + 6 extra screen checks passed. The new editor passed
   31 browser checks; focus, advanced UI, storage-failure feedback and open-panel
@@ -33,8 +33,17 @@ scope and safety limits.
 - Actual UI configuration 12000 cash and 37/0 land price produced a real
   11963-cash purchase. Only the dice was controlled in this transaction test.
 - Actual regeneration preserved 11 handwritten files and unchanged generated
-  outputs. Privacy regression checks passed. Portable validation is recorded
-  separately before release; older numbers below are historical evidence.
+  outputs. Privacy regression checks passed.
+- An actual detached portable ZIP passed the same 66 browser checks using its
+  included Windows PowerShell server with a system-only PATH: Node and Java were
+  unavailable. Runtime identity with the final tagged package is checked by a
+  combined payload digest; the candidate commit/hash are recorded explicitly.
+- 0.1×/1×/20× produced identical seeded game snapshots, RNG state and diagnostics
+  after equal simulation time. A focus regression found during review was fixed:
+  mouse-closing settings or resuming from the compact control restores game keys.
+- Current storage is approximately 10 MB of tracked source, including 1.8 MB of
+  runtime editable assets; the ZIP is approximately 3.1 MB / 5.5 MB extracted.
+  These decimal sizes are not additive. Older counts below are historical.
 
 ## Historical v0.1.1 validation / v0.1.1 历史验收
 

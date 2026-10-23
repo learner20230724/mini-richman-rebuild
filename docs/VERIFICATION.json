@@ -219,8 +219,8 @@
     "regenerationRechecked": true
   },
   "customizationV020": {
-    "phase": "source verified; detached portable verification follows before publication",
-    "unitTestsPassed": 227,
+    "phase": "source and detached portable runtime verified",
+    "unitTestsPassed": 228,
     "unitTestsFailed": 0,
     "originalScriptBlocksExercised": 45,
     "newModules": [
@@ -645,6 +645,357 @@
       "humanFilesPreserved": 11,
       "generatedOutputsUnchanged": true
     },
-    "privacyRegression": "passed token/path and staged-index canaries"
+    "privacyRegression": "passed token/path and staged-index canaries",
+    "defaultPacingEquivalence": "0.1x/1x/20x seeded gameplay snapshots, RNG state and sound diagnostics match after equal original simulation ticks.",
+    "detachedPortable": {
+      "pass": true,
+      "candidateSourceCommit": "11b9681eee8ca164a16bc93d3fcd927296dc8e82",
+      "candidateZIP_SHA256": "7cb06e4f5531321de78dd9c6471d8fa145e1c28176550f35fc9e0e735caeca41",
+      "files": 198,
+      "runtimeFiles": 188,
+      "runtimePayloadSHA256": "9da3b376b87461c0c14c830def4a286f84d90f1e42780198d42e9c87aa58c40a",
+      "systemOnlyPATH": true,
+      "nodeVisible": false,
+      "javaVisible": false,
+      "server": "included Windows PowerShell loopback server",
+      "browserChecksPassed": 66,
+      "scope": "All four browser helpers ran against an actual detached ZIP. Final release differs only in tests/documentation/manifest; runtime identity is checked by payload digest.",
+      "editor": {
+        "pass": true,
+        "checks": [
+          {
+            "name": "editor defaults preserve original rules",
+            "pass": true
+          },
+          {
+            "name": "1x advances original fixed-step simulation in real wall time",
+            "pass": true,
+            "detail": {
+              "wallMs": 414.89999985694885,
+              "gameMs": 420,
+              "target": 1,
+              "samplingToleranceMs": 120
+            }
+          },
+          {
+            "name": "20x target advances faster without changing original tick length",
+            "pass": true,
+            "detail": {
+              "wallMs": 409.7999999523163,
+              "gameMs": 7980,
+              "target": 20,
+              "samplingToleranceMs": 2020
+            }
+          },
+          {
+            "name": "0x freezes simulation and game keyboard input",
+            "pass": true,
+            "detail": {
+              "stopped": {
+                "time": 11260,
+                "x": 50,
+                "frame": 1
+              },
+              "still": {
+                "time": 11260,
+                "x": 50,
+                "frame": 1
+              }
+            }
+          },
+          {
+            "name": "paused manual step advances exactly one original 20 ms tick",
+            "pass": true
+          },
+          {
+            "name": "closing editor does not clear user 0x pause",
+            "pass": true
+          },
+          {
+            "name": "F2 independently pauses a running game",
+            "pass": true
+          },
+          {
+            "name": "F2 opens the real editor panel",
+            "pass": true
+          },
+          {
+            "name": "editor reserves non-overlapping 4:3 game space 1280x720",
+            "pass": true,
+            "detail": {
+              "canvas": {
+                "x": 0,
+                "y": 60,
+                "width": 800,
+                "height": 600
+              },
+              "editor": {
+                "x": 800,
+                "y": 0,
+                "width": 480,
+                "height": 720
+              },
+              "overlapWidth": 0,
+              "overlapHeight": 600
+            }
+          },
+          {
+            "name": "editor reserves non-overlapping 4:3 game space 600x450",
+            "pass": true,
+            "detail": {
+              "canvas": {
+                "x": 165,
+                "y": 0,
+                "width": 270,
+                "height": 202.5
+              },
+              "editor": {
+                "x": 0,
+                "y": 202.5,
+                "width": 600,
+                "height": 247.5
+              },
+              "overlapWidth": 270,
+              "overlapHeight": 0
+            }
+          },
+          {
+            "name": "typing W/A/D/S into an editor input never reaches a running game",
+            "pass": true,
+            "detail": {
+              "menuBefore": {
+                "x": 50,
+                "frame": 1
+              },
+              "menuAfter": {
+                "x": 50,
+                "frame": 1
+              }
+            }
+          },
+          {
+            "name": "draft undo restores the previous edit without applying",
+            "pass": true
+          },
+          {
+            "name": "12000 cash and 37/0 land prices remain an unapplied draft",
+            "pass": true,
+            "detail": {
+              "draft": {
+                "characters": {
+                  "b6": {
+                    "cash": 12000
+                  }
+                },
+                "properties": {
+                  "1": {
+                    "cash": 37,
+                    "diamonds": 0
+                  }
+                }
+              },
+              "active": {},
+              "stats": {
+                "changed": 3,
+                "total": 2328,
+                "characters": 1,
+                "properties": 2,
+                "numbers": 0,
+                "namedNumbers": 0,
+                "advancedNumbers": 0,
+                "draftChanged": 3,
+                "unsavedChanges": 0,
+                "presetCount": 0
+              }
+            }
+          },
+          {
+            "name": "apply creates a fresh menu with the selected active rules",
+            "pass": true
+          },
+          {
+            "name": "real keyboard starts configured b6/b2 game",
+            "pass": true
+          },
+          {
+            "name": "configured land price appears in the real original purchase popup",
+            "pass": true
+          },
+          {
+            "name": "configured purchase actually debits 37 cash and 0 diamonds for the whole band",
+            "pass": true,
+            "detail": {
+              "cash": 11963,
+              "diamonds": 3,
+              "owners": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "turn": 2
+            }
+          },
+          {
+            "name": "explicit sandbox UI changes live cash without changing active or draft rules",
+            "pass": true
+          },
+          {
+            "name": "explicit sandbox property UI updates ownership, building display and statistics coherently",
+            "pass": true
+          },
+          {
+            "name": "explicit save writes applied rules rather than game progress",
+            "pass": true
+          },
+          {
+            "name": "saved rules reload into a fresh game, not a saved in-progress match",
+            "pass": true
+          },
+          {
+            "name": "named preset saves only draft rules and does not apply them",
+            "pass": true
+          },
+          {
+            "name": "loading a named preset replaces only the draft",
+            "pass": true
+          },
+          {
+            "name": "JSON export downloads the actual unapplied draft",
+            "pass": true,
+            "detail": {
+              "schemaVersion": 1,
+              "overrides": {
+                "characters": {
+                  "b6": {
+                    "cash": 12500
+                  }
+                },
+                "properties": {
+                  "1": {
+                    "cash": 37,
+                    "diamonds": 0
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "invalid JSON import is rejected atomically without partial draft or active changes",
+            "pass": true,
+            "detail": {
+              "beforeInvalid": {
+                "draft": {
+                  "characters": {
+                    "b6": {
+                      "cash": 12500
+                    }
+                  },
+                  "properties": {
+                    "1": {
+                      "cash": 37,
+                      "diamonds": 0
+                    }
+                  }
+                },
+                "active": {
+                  "characters": {
+                    "b6": {
+                      "cash": 12000
+                    }
+                  },
+                  "properties": {
+                    "1": {
+                      "cash": 37,
+                      "diamonds": 0
+                    }
+                  }
+                },
+                "stats": {
+                  "changed": 3,
+                  "total": 2328,
+                  "characters": 1,
+                  "properties": 2,
+                  "numbers": 0,
+                  "namedNumbers": 0,
+                  "advancedNumbers": 0,
+                  "draftChanged": 1,
+                  "unsavedChanges": 0,
+                  "presetCount": 1
+                }
+              },
+              "afterInvalid": {
+                "draft": {
+                  "characters": {
+                    "b6": {
+                      "cash": 12500
+                    }
+                  },
+                  "properties": {
+                    "1": {
+                      "cash": 37,
+                      "diamonds": 0
+                    }
+                  }
+                },
+                "active": {
+                  "characters": {
+                    "b6": {
+                      "cash": 12000
+                    }
+                  },
+                  "properties": {
+                    "1": {
+                      "cash": 37,
+                      "diamonds": 0
+                    }
+                  }
+                },
+                "stats": {
+                  "changed": 3,
+                  "total": 2328,
+                  "characters": 1,
+                  "properties": 2,
+                  "numbers": 0,
+                  "namedNumbers": 0,
+                  "advancedNumbers": 0,
+                  "draftChanged": 1,
+                  "unsavedChanges": 0,
+                  "presetCount": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "valid JSON import replaces only the draft and does not apply or save",
+            "pass": true
+          },
+          {
+            "name": "named preset deletion does not modify the current game",
+            "pass": true
+          },
+          {
+            "name": "restoring original defaults resets only the draft until apply",
+            "pass": true
+          },
+          {
+            "name": "applying restored defaults returns active rules to original",
+            "pass": true
+          },
+          {
+            "name": "verification finishes with clean original configuration and default 1x",
+            "pass": true
+          },
+          {
+            "name": "no game or browser errors during editor verification",
+            "pass": true,
+            "detail": []
+          }
+        ],
+        "fixtureScope": "Real editor controls, keyboard and wall-clock pacing; not native Flash differential or rendered full-game completion.",
+        "browserErrors": []
+      }
+    }
   }
 }
