@@ -36,6 +36,9 @@ async(page)=>{
     const still=await page.evaluate(()=>({time:richman.now,x:richman.root.named.p1.proxy._x,selected:richman.root.vars.ppp1,frame:richman.root.frame}));
     check('0x freezes simulation and game keyboard input',json(stopped)===json(still),{stopped,still});
     await page.keyboard.press('F2');
+    // This regression intentionally exercises the optional manual-draft mode.
+    // Default automatic live application is verified separately.
+    await page.locator('[data-auto-apply]').uncheck();
     await page.waitForFunction(()=>richmanControls.getStatus().editorPaused===true);
     const beforeStep=await page.evaluate(()=>richman.now);await page.evaluate(()=>richmanControls.stepOnce());
     check('paused manual step advances exactly one original 20 ms tick',await page.evaluate(()=>richman.now)===beforeStep+20);
@@ -79,8 +82,8 @@ async(page)=>{
     await page.locator('input[data-field="properties.1.diamonds"]').fill('0');
     const drafted=await storeState();
     check('12000 cash and 37/0 land prices remain an unapplied draft',json(drafted.active)===activeBefore&&drafted.draft.characters.b6.cash===12000&&drafted.draft.properties['1'].cash===37&&drafted.draft.properties['1'].diamonds===0&&drafted.stats.draftChanged===3,drafted);
-    await page.locator('[data-apply-config]').click();
-    check('apply creates a fresh menu with the selected active rules',await page.evaluate(()=>richman.root.frame===1&&richman.now===0&&richmanControls.store.active.characters.b6.cash===12000&&richmanControls.store.stats().draftChanged===0));
+    await page.locator('[data-restart-config]').click();
+    check('explicit restart creates a fresh menu with the selected active rules',await page.evaluate(()=>richman.root.frame===1&&richman.now===0&&richmanControls.store.active.characters.b6.cash===12000&&richmanControls.store.stats().draftChanged===0));
     await page.keyboard.press('F2');await page.locator('#game').focus();await page.evaluate(()=>richmanControls.setSpeed(20));
     for(let i=0;i<4;i++)await page.keyboard.press('d');
     await page.keyboard.press('w');await page.keyboard.press('ArrowUp');
@@ -116,7 +119,7 @@ async(page)=>{
     }));
     await page.reload();await ready();
     check('saved rules reload into a fresh game, not a saved in-progress match',await page.evaluate(()=>richman.root.frame===1&&richmanControls.store.active.characters.b6.cash===12000&&richmanControls.store.active.properties['1'].cash===37&&richmanControls.store.stats().unsavedChanges===0));
-    await page.keyboard.press('F2');await page.locator('[data-tab="characters"]').click();
+    await page.keyboard.press('F2');await page.locator('[data-auto-apply]').uncheck();await page.locator('[data-tab="characters"]').click();
     await page.locator('select[aria-label="选择角色"]').selectOption('b6');
     await page.locator('input[data-field="characters.b6.cash"]').fill('12500');
     await page.locator('.rm-editor-presets > summary').click();
@@ -148,8 +151,8 @@ async(page)=>{
     await page.locator('.rm-editor-reset > summary').click();
     await page.getByRole('button',{name:'草稿恢复原版',exact:true}).click();
     check('restoring original defaults resets only the draft until apply',await page.evaluate(()=>JSON.stringify(richmanControls.store.current)==='{}'&&richmanControls.store.active.characters.b6.cash===12000));
-    await page.locator('[data-apply-config]').click();await page.locator('[data-save-active]').click();
-    check('applying restored defaults returns active rules to original',await page.evaluate(()=>JSON.stringify(richmanControls.store.active)==='{}'&&richman.root.frame===1));
+    await page.locator('[data-restart-config]').click();await page.locator('[data-save-active]').click();
+    check('explicitly restarting with restored defaults returns active rules to original',await page.evaluate(()=>JSON.stringify(richmanControls.store.active)==='{}'&&richman.root.frame===1));
     await page.evaluate(()=>localStorage.removeItem(richmanControls.store.storageKey));await page.reload();await ready();
     check('verification finishes with clean original configuration and default 1x',await page.evaluate(()=>JSON.stringify(richmanControls.store.current)==='{}'&&JSON.stringify(richmanControls.store.active)==='{}'&&richmanControls.getSpeed()===1&&localStorage.getItem(richmanControls.store.storageKey)===null));
     check('no game or browser errors during editor verification',errors.length===0&&await page.evaluate(()=>richman.errors.length===0&&document.querySelector('#error').textContent===''),errors);

@@ -44,7 +44,13 @@
       const v=game.root.vars;
       if(![1,2].includes(v.xingqi)||![1,2].includes(v.shui)||v.xingqi!==v.shui)return '请等待移动或事件结束 / Wait for movement or event';
       const popup=game.root.children.get(OFFSET+88);
-      if(popup?.alive&&popup.id!==game.data.exports.tt)return '请先完成当前弹窗 / Complete the current dialog';
+      // Successful shop purchases/redemptions retain the panel, but the original
+      // key handler permanently closes its selector (h=0 and hidden). Only this
+      // exact settled state is exempt; an unaffordable or unconfirmed shop stays
+      // locked. Stable-turn, timer and spinner guards still apply independently.
+      const shopSelector=popup?.id===game.data.exports.chaoshi?popup.named.kuang:null;
+      const settledShop=shopSelector?.alive&&shopSelector.vars.h===0&&shopSelector.visible===false;
+      if(popup?.alive&&popup.id!==game.data.exports.tt&&!settledShop)return '请先完成当前弹窗 / Complete the current dialog';
       // tanchu is deliberately not used: original confirmation leaves it at 1.
       for(const [id]of game.timers)if(id!==v.shijian)return '请等待计时事件结束 / Wait for the timed event';
       for(const clip of game.walk())if(clip.alive&&clip.vars.keyizhuan>0)return '请等待转盘结束 / Wait for the spinner';

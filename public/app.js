@@ -22,21 +22,32 @@
     game=createGame(store.active);
     // Explicit development APIs, not a substitute for real UI verification.
     window.richman=game;
-    clock=new RichmanClock(ms=>game.step(ms));
+    let lastLiveResult=null;
+    const live=new RichmanLiveSettings(RichmanDefaults,{onApplied:({game:target,config,result})=>{
+      if(target!==game)return;store.setActive(config);lastLiveResult=result;
+      window.richmanEditor?.refreshState();
+    }});
+    function step(ms){live.flush(game);game.step(ms);live.flush(game);}
+    clock=new RichmanClock(step);
     const sandbox=new RichmanSandbox(()=>game);
     const adapter={
       store,defaults:RichmanDefaults,getGame:()=>game,
       getSpeed:()=>clock.speed,
       setSpeed:value=>{clock.setSpeed(value,performance.now());return clock.speed;},
       pauseEditor:paused=>{editorPaused=!!paused;clock.setHidden(document.hidden||editorPaused,performance.now());},
-      stepOnce:()=>{if(document.hidden)throw new Error('页面隐藏时不能单步');if(clock.speed!==0&&!editorPaused)throw new Error('请先暂停再单步');game.step(20);render();},
+      stepOnce:()=>{if(document.hidden)throw new Error('页面隐藏时不能单步');if(clock.speed!==0&&!editorPaused)throw new Error('请先暂停再单步');step(20);render();},
       apply:config=>{
         const candidate=createGame(config);
-        store.replace(config);store.apply();game=candidate;window.richman=game;
+        live.cancel();store.replace(config);store.apply();game=candidate;window.richman=game;lastLiveResult=null;
         sandbox.reset?.();clock.reset(performance.now());render();return true;
       },
+      applyLive:config=>{
+        const result=live.apply(game,config);store.replace(config);lastLiveResult=result;render();return result;
+      },
+      cancelPending:()=>{live.cancel();lastLiveResult=null;},
+      previewLive:config=>live.preview(game,config),
       sandbox:(action,payload)=>{const result=sandbox.run(action,payload);render();return result;},
-      getStatus:()=>({...sandbox.snapshot(),turn:game.root.vars.shui,simulationTime:game.now,speed:clock.speed,paused:clock.speed===0||editorPaused||document.hidden,editorPaused,warnings:[...warnings]})
+      getStatus:()=>({...sandbox.snapshot(),turn:game.root.vars.shui,simulationTime:game.now,speed:clock.speed,paused:clock.speed===0||editorPaused||document.hidden,editorPaused,warnings:[...warnings],liveSettings:{pending:!!live.pending,reason:live.pending?.reason||'',lastResult:lastLiveResult,request:live.pending}})
     };
     window.richmanControls=adapter;
     function draw(clip){
@@ -73,7 +84,7 @@
     }
     function render(){const b=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1,w=Math.round(b.width*dpr),h=Math.round(b.height*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}ctx.setTransform(w/600,0,0,h/450,0,0);ctx.globalAlpha=1;ctx.fillStyle=RichmanData.background;ctx.fillRect(0,0,600,450);draw(game.root);}
     function frame(now){
-      try{clock.frame(now);if(!document.hidden)render();requestAnimationFrame(frame);}catch(e){fail(e);}
+      try{live.flush(game);clock.frame(now);live.flush(game);if(!document.hidden)render();requestAnimationFrame(frame);}catch(e){fail(e);}
     }
     document.addEventListener('visibilitychange',()=>clock.setHidden(document.hidden||editorPaused,performance.now()));
     clock.setHidden(document.hidden,performance.now());
@@ -83,7 +94,7 @@
       if(event.defaultPrevented||event.target?.closest?.('input,textarea,select,button,[contenteditable=\"true\"]'))return;
       if(clock.speed===0||editorPaused||document.hidden)return;
       const codes={a:65,d:68,w:87,s:83,ArrowLeft:37,ArrowRight:39,ArrowUp:38,ArrowDown:40,'0':48,'1':49,'2':50};
-      const code=codes[event.key]??codes[event.key.toLowerCase()];if(code){event.preventDefault();if(!event.repeat)try{game.keyDown(code);render();}catch(e){fail(e);}}
+      const code=codes[event.key]??codes[event.key.toLowerCase()];if(code){event.preventDefault();if(!event.repeat)try{game.keyDown(code);live.flush(game);render();}catch(e){fail(e);}}
     });
     // The original is keyboard-only. Pointer coordinates are nevertheless mapped
     // to the stage, independent of viewport scale, for future non-generated extensions.

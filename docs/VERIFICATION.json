@@ -997,5 +997,2729 @@
         "browserErrors": []
       }
     }
+  },
+  "liveCustomizationV030": {
+    "phase": "source verified; standalone package validation follows before publication",
+    "unitTestsPassed": 278,
+    "unitTestsFailed": 0,
+    "originalScriptBlocksExercised": 45,
+    "originalBrowserChecksPassed": 66,
+    "liveBrowserChecksPassed": 32,
+    "liveBrowser": {
+      "pass": true,
+      "checks": [
+        {
+          "name": "live verification starts with unchanged original rules",
+          "pass": true
+        },
+        {
+          "name": "real keyboard selects b6/b2 before any live update",
+          "pass": true
+        },
+        {
+          "name": "automatic change commit defaults to enabled",
+          "pass": true
+        },
+        {
+          "name": "blur-committed character edits update the live selected player without replacing the game",
+          "pass": true,
+          "detail": {
+            "sameGame": true,
+            "frame": 2,
+            "now": 6280,
+            "positions": [
+              [
+                254,
+                1
+              ],
+              [
+                258,
+                1
+              ]
+            ],
+            "turn": [
+              1,
+              1,
+              "1P"
+            ],
+            "owners": [
+              null,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "levels": [
+              null,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "cash": [
+              12000,
+              6000
+            ],
+            "diamonds": [
+              3,
+              0
+            ]
+          }
+        },
+        {
+          "name": "live character updates preserve board frame, clock, positions, turn and ownership",
+          "pass": true,
+          "detail": {
+            "initial": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 6280,
+              "positions": [
+                [
+                  254,
+                  1
+                ],
+                [
+                  258,
+                  1
+                ]
+              ],
+              "turn": [
+                1,
+                1,
+                "1P"
+              ],
+              "owners": [
+                null,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                2000,
+                6000
+              ],
+              "diamonds": [
+                3,
+                0
+              ]
+            },
+            "changed": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 6280,
+              "positions": [
+                [
+                  254,
+                  1
+                ],
+                [
+                  258,
+                  1
+                ]
+              ],
+              "turn": [
+                1,
+                1,
+                "1P"
+              ],
+              "owners": [
+                null,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                12000,
+                6000
+              ],
+              "diamonds": [
+                3,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "name": "automatic live apply does not show a restart confirmation",
+          "pass": true,
+          "detail": [
+            {
+              "type": "confirm",
+              "message": "按当前草稿重新开局？当前对局进度将丢失。\n仅想修改当前游戏请取消，使用“立即应用本局”。不会自动保存到本机。"
+            }
+          ]
+        },
+        {
+          "name": "global house-cost edit does not restore character starting cash or restart",
+          "pass": true,
+          "detail": {
+            "sameGame": true,
+            "frame": 2,
+            "now": 6280,
+            "positions": [
+              [
+                254,
+                1
+              ],
+              [
+                258,
+                1
+              ]
+            ],
+            "turn": [
+              1,
+              1,
+              "1P"
+            ],
+            "owners": [
+              null,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "levels": [
+              null,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "cash": [
+              12000,
+              6000
+            ],
+            "diamonds": [
+              3,
+              0
+            ]
+          }
+        },
+        {
+          "name": "37/0 property price is applied on the existing board before the first roll",
+          "pass": true
+        },
+        {
+          "name": "live property price appears in the original purchase popup",
+          "pass": true
+        },
+        {
+          "name": "real keyboard purchase debits 37/0 and grants the complete original band",
+          "pass": true,
+          "detail": {
+            "sameGame": true,
+            "frame": 2,
+            "now": 8700,
+            "positions": [
+              [
+                304,
+                1
+              ],
+              [
+                258,
+                1
+              ]
+            ],
+            "turn": [
+              2,
+              2,
+              "2P"
+            ],
+            "owners": [
+              null,
+              1,
+              1,
+              1,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "levels": [
+              null,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "cash": [
+              11963,
+              6000
+            ],
+            "diamonds": [
+              3,
+              0
+            ]
+          }
+        },
+        {
+          "name": "live bank bonus is used by the next original bank-crossing action",
+          "pass": true,
+          "detail": {
+            "bankBefore": 11963,
+            "bankAfter": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 10020,
+              "positions": [
+                [
+                  251,
+                  5
+                ],
+                [
+                  258,
+                  1
+                ]
+              ],
+              "turn": [
+                2,
+                2,
+                "2P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                12518,
+                6000
+              ],
+              "diamonds": [
+                3,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "name": "later unrelated changes preserve already earned and spent cash",
+          "pass": true,
+          "detail": {
+            "sameGame": true,
+            "frame": 2,
+            "now": 10020,
+            "positions": [
+              [
+                251,
+                5
+              ],
+              [
+                258,
+                1
+              ]
+            ],
+            "turn": [
+              2,
+              2,
+              "2P"
+            ],
+            "owners": [
+              null,
+              1,
+              1,
+              1,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "levels": [
+              null,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "cash": [
+              12518,
+              6000
+            ],
+            "diamonds": [
+              3,
+              0
+            ]
+          }
+        },
+        {
+          "name": "next real house purchase uses hot-updated 322 cost",
+          "pass": true,
+          "detail": {
+            "buildBefore": 12518,
+            "built": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 11880,
+              "positions": [
+                [
+                  304,
+                  1
+                ],
+                [
+                  258,
+                  1
+                ]
+              ],
+              "turn": [
+                2,
+                2,
+                "2P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                12196,
+                6000
+              ],
+              "diamonds": [
+                3,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "name": "next original rent event uses hot-updated rent and live owner tax",
+          "pass": true,
+          "detail": {
+            "rentBefore": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 11880,
+              "positions": [
+                [
+                  304,
+                  1
+                ],
+                [
+                  254,
+                  1
+                ]
+              ],
+              "turn": [
+                2,
+                2,
+                "2P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                12196,
+                6000
+              ],
+              "diamonds": [
+                3,
+                0
+              ]
+            },
+            "rented": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 13080,
+              "positions": [
+                [
+                  304,
+                  1
+                ],
+                [
+                  304,
+                  1
+                ]
+              ],
+              "turn": [
+                1,
+                1,
+                "1P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                12293.09,
+                5867
+              ],
+              "diamonds": [
+                3,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "name": "next real corner-shop purchase uses hot-updated item cost",
+          "pass": true,
+          "detail": {
+            "shopBefore": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 13080,
+              "positions": [
+                [
+                  501,
+                  1
+                ],
+                [
+                  304,
+                  1
+                ]
+              ],
+              "turn": [
+                1,
+                1,
+                "1P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                12293.09,
+                5867
+              ],
+              "diamonds": [
+                3,
+                0
+              ]
+            },
+            "shopped": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 16900,
+              "positions": [
+                [
+                  551,
+                  1
+                ],
+                [
+                  304,
+                  1
+                ]
+              ],
+              "turn": [
+                2,
+                2,
+                "2P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                12170.09,
+                5867
+              ],
+              "diamonds": [
+                3,
+                0
+              ]
+            },
+            "starsBefore": 3
+          }
+        },
+        {
+          "name": "moving 700-to-1400 ms edit preserves remaining timer progress",
+          "pass": true,
+          "detail": {
+            "movingBefore": {
+              "id": 8,
+              "ms": 700,
+              "remaining": 480,
+              "now": 17160,
+              "position": [
+                254,
+                1
+              ],
+              "dice": 3,
+              "random": [],
+              "turn": 1
+            },
+            "movingAfter": {
+              "sameGame": true,
+              "ms": 1400,
+              "remaining": 960,
+              "now": 17160,
+              "position": [
+                254,
+                1
+              ],
+              "dice": 3,
+              "random": [],
+              "turn": 1
+            }
+          }
+        },
+        {
+          "name": "movement timing update never jumps a cell, rerolls, resets time or changes turn",
+          "pass": true,
+          "detail": {
+            "movingBefore": {
+              "id": 8,
+              "ms": 700,
+              "remaining": 480,
+              "now": 17160,
+              "position": [
+                254,
+                1
+              ],
+              "dice": 3,
+              "random": [],
+              "turn": 1
+            },
+            "movingAfter": {
+              "sameGame": true,
+              "ms": 1400,
+              "remaining": 960,
+              "now": 17160,
+              "position": [
+                254,
+                1
+              ],
+              "dice": 3,
+              "random": [],
+              "turn": 1
+            }
+          }
+        },
+        {
+          "name": "popup edits show pending safe-point status instead of replacing transaction values",
+          "pass": true,
+          "detail": {
+            "live": {
+              "pending": true,
+              "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules",
+              "lastResult": {
+                "status": "queued",
+                "pending": true,
+                "applied": false,
+                "deferred": true,
+                "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules",
+                "reasons": [
+                  "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules"
+                ],
+                "config": {
+                  "characters": {
+                    "b6": {
+                      "cash": 12000,
+                      "bankBonus": 555,
+                      "overdraft": 888,
+                      "taxPercent": 27
+                    }
+                  },
+                  "numbers": {
+                    "rules.houseCash": 777,
+                    "rules.rentHouse": 133,
+                    "rules.shopStarCash": 123,
+                    "rules.stepMilliseconds": 1400
+                  },
+                  "properties": {
+                    "1": {
+                      "cash": 37,
+                      "diamonds": 0
+                    },
+                    "6": {
+                      "cash": 73,
+                      "diamonds": 0
+                    }
+                  }
+                },
+                "changes": [
+                  {
+                    "group": "numbers",
+                    "id": "rules.houseCash",
+                    "path": [
+                      "numbers",
+                      "rules.houseCash"
+                    ],
+                    "value": 777,
+                    "oldValue": 322,
+                    "effect": "safe-boundary",
+                    "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules; 后续对应购买、升级、租金或道具事件读取新规则；不追溯已结算结果 / New rules on subsequent events; settled results stay unchanged",
+                    "afterApply": "next-trigger"
+                  },
+                  {
+                    "group": "properties",
+                    "id": "6",
+                    "field": "cash",
+                    "path": [
+                      "properties",
+                      "6",
+                      "cash"
+                    ],
+                    "value": 73,
+                    "oldValue": 300,
+                    "effect": "safe-boundary",
+                    "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules; 更新实际价格表；不改变已购土地、房屋或已支付金额 / Update price tables, not ownership, buildings or past payments",
+                    "afterApply": "immediate"
+                  },
+                  {
+                    "group": "properties",
+                    "id": "6",
+                    "field": "diamonds",
+                    "path": [
+                      "properties",
+                      "6",
+                      "diamonds"
+                    ],
+                    "value": 0,
+                    "oldValue": 1,
+                    "effect": "safe-boundary",
+                    "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules; 更新实际价格表；不改变已购土地、房屋或已支付金额 / Update price tables, not ownership, buildings or past payments",
+                    "afterApply": "immediate"
+                  }
+                ]
+              },
+              "request": {
+                "status": "queued",
+                "pending": true,
+                "applied": false,
+                "deferred": true,
+                "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules",
+                "reasons": [
+                  "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules"
+                ],
+                "config": {
+                  "characters": {
+                    "b6": {
+                      "cash": 12000,
+                      "bankBonus": 555,
+                      "overdraft": 888,
+                      "taxPercent": 27
+                    }
+                  },
+                  "numbers": {
+                    "rules.houseCash": 777,
+                    "rules.rentHouse": 133,
+                    "rules.shopStarCash": 123,
+                    "rules.stepMilliseconds": 1400
+                  },
+                  "properties": {
+                    "1": {
+                      "cash": 37,
+                      "diamonds": 0
+                    },
+                    "6": {
+                      "cash": 73,
+                      "diamonds": 0
+                    }
+                  }
+                },
+                "changes": [
+                  {
+                    "group": "numbers",
+                    "id": "rules.houseCash",
+                    "path": [
+                      "numbers",
+                      "rules.houseCash"
+                    ],
+                    "value": 777,
+                    "oldValue": 322,
+                    "effect": "safe-boundary",
+                    "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules; 后续对应购买、升级、租金或道具事件读取新规则；不追溯已结算结果 / New rules on subsequent events; settled results stay unchanged",
+                    "afterApply": "next-trigger"
+                  },
+                  {
+                    "group": "properties",
+                    "id": "6",
+                    "field": "cash",
+                    "path": [
+                      "properties",
+                      "6",
+                      "cash"
+                    ],
+                    "value": 73,
+                    "oldValue": 300,
+                    "effect": "safe-boundary",
+                    "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules; 更新实际价格表；不改变已购土地、房屋或已支付金额 / Update price tables, not ownership, buildings or past payments",
+                    "afterApply": "immediate"
+                  },
+                  {
+                    "group": "properties",
+                    "id": "6",
+                    "field": "diamonds",
+                    "path": [
+                      "properties",
+                      "6",
+                      "diamonds"
+                    ],
+                    "value": 0,
+                    "oldValue": 1,
+                    "effect": "safe-boundary",
+                    "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules; 更新实际价格表；不改变已购土地、房屋或已支付金额 / Update price tables, not ownership, buildings or past payments",
+                    "afterApply": "immediate"
+                  }
+                ]
+              }
+            },
+            "text": "等待安全点，本次配置尚未生效：等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules 关闭设置，或取消“编辑时暂停”继续完成移动 / 弹窗，安全后自动生效。",
+            "active": {
+              "characters": {
+                "b6": {
+                  "cash": 12000,
+                  "bankBonus": 555,
+                  "overdraft": 888,
+                  "taxPercent": 27
+                }
+              },
+              "numbers": {
+                "rules.houseCash": 322,
+                "rules.rentHouse": 133,
+                "rules.shopStarCash": 123,
+                "rules.stepMilliseconds": 1400
+              },
+              "properties": {
+                "1": {
+                  "cash": 37,
+                  "diamonds": 0
+                }
+              }
+            },
+            "draft": {
+              "characters": {
+                "b6": {
+                  "cash": 12000,
+                  "bankBonus": 555,
+                  "overdraft": 888,
+                  "taxPercent": 27
+                }
+              },
+              "numbers": {
+                "rules.houseCash": 777,
+                "rules.rentHouse": 133,
+                "rules.shopStarCash": 123,
+                "rules.stepMilliseconds": 1400
+              },
+              "properties": {
+                "1": {
+                  "cash": 37,
+                  "diamonds": 0
+                },
+                "6": {
+                  "cash": 73,
+                  "diamonds": 0
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "queued full candidate is a draft while active rules remain the old complete set",
+          "pass": true,
+          "detail": {
+            "live": {
+              "pending": true,
+              "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules",
+              "lastResult": {
+                "status": "queued",
+                "pending": true,
+                "applied": false,
+                "deferred": true,
+                "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules",
+                "reasons": [
+                  "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules"
+                ],
+                "config": {
+                  "characters": {
+                    "b6": {
+                      "cash": 12000,
+                      "bankBonus": 555,
+                      "overdraft": 888,
+                      "taxPercent": 27
+                    }
+                  },
+                  "numbers": {
+                    "rules.houseCash": 777,
+                    "rules.rentHouse": 133,
+                    "rules.shopStarCash": 123,
+                    "rules.stepMilliseconds": 1400
+                  },
+                  "properties": {
+                    "1": {
+                      "cash": 37,
+                      "diamonds": 0
+                    },
+                    "6": {
+                      "cash": 73,
+                      "diamonds": 0
+                    }
+                  }
+                },
+                "changes": [
+                  {
+                    "group": "numbers",
+                    "id": "rules.houseCash",
+                    "path": [
+                      "numbers",
+                      "rules.houseCash"
+                    ],
+                    "value": 777,
+                    "oldValue": 322,
+                    "effect": "safe-boundary",
+                    "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules; 后续对应购买、升级、租金或道具事件读取新规则；不追溯已结算结果 / New rules on subsequent events; settled results stay unchanged",
+                    "afterApply": "next-trigger"
+                  },
+                  {
+                    "group": "properties",
+                    "id": "6",
+                    "field": "cash",
+                    "path": [
+                      "properties",
+                      "6",
+                      "cash"
+                    ],
+                    "value": 73,
+                    "oldValue": 300,
+                    "effect": "safe-boundary",
+                    "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules; 更新实际价格表；不改变已购土地、房屋或已支付金额 / Update price tables, not ownership, buildings or past payments",
+                    "afterApply": "immediate"
+                  },
+                  {
+                    "group": "properties",
+                    "id": "6",
+                    "field": "diamonds",
+                    "path": [
+                      "properties",
+                      "6",
+                      "diamonds"
+                    ],
+                    "value": 0,
+                    "oldValue": 1,
+                    "effect": "safe-boundary",
+                    "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules; 更新实际价格表；不改变已购土地、房屋或已支付金额 / Update price tables, not ownership, buildings or past payments",
+                    "afterApply": "immediate"
+                  }
+                ]
+              },
+              "request": {
+                "status": "queued",
+                "pending": true,
+                "applied": false,
+                "deferred": true,
+                "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules",
+                "reasons": [
+                  "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules"
+                ],
+                "config": {
+                  "characters": {
+                    "b6": {
+                      "cash": 12000,
+                      "bankBonus": 555,
+                      "overdraft": 888,
+                      "taxPercent": 27
+                    }
+                  },
+                  "numbers": {
+                    "rules.houseCash": 777,
+                    "rules.rentHouse": 133,
+                    "rules.shopStarCash": 123,
+                    "rules.stepMilliseconds": 1400
+                  },
+                  "properties": {
+                    "1": {
+                      "cash": 37,
+                      "diamonds": 0
+                    },
+                    "6": {
+                      "cash": 73,
+                      "diamonds": 0
+                    }
+                  }
+                },
+                "changes": [
+                  {
+                    "group": "numbers",
+                    "id": "rules.houseCash",
+                    "path": [
+                      "numbers",
+                      "rules.houseCash"
+                    ],
+                    "value": 777,
+                    "oldValue": 322,
+                    "effect": "safe-boundary",
+                    "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules; 后续对应购买、升级、租金或道具事件读取新规则；不追溯已结算结果 / New rules on subsequent events; settled results stay unchanged",
+                    "afterApply": "next-trigger"
+                  },
+                  {
+                    "group": "properties",
+                    "id": "6",
+                    "field": "cash",
+                    "path": [
+                      "properties",
+                      "6",
+                      "cash"
+                    ],
+                    "value": 73,
+                    "oldValue": 300,
+                    "effect": "safe-boundary",
+                    "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules; 更新实际价格表；不改变已购土地、房屋或已支付金额 / Update price tables, not ownership, buildings or past payments",
+                    "afterApply": "immediate"
+                  },
+                  {
+                    "group": "properties",
+                    "id": "6",
+                    "field": "diamonds",
+                    "path": [
+                      "properties",
+                      "6",
+                      "diamonds"
+                    ],
+                    "value": 0,
+                    "oldValue": 1,
+                    "effect": "safe-boundary",
+                    "reason": "等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules; 更新实际价格表；不改变已购土地、房屋或已支付金额 / Update price tables, not ownership, buildings or past payments",
+                    "afterApply": "immediate"
+                  }
+                ]
+              }
+            },
+            "text": "等待安全点，本次配置尚未生效：等待当前弹窗按旧规则完成；整份配置尚未生效 / Complete the current dialog under the old rules 关闭设置，或取消“编辑时暂停”继续完成移动 / 弹窗，安全后自动生效。",
+            "active": {
+              "characters": {
+                "b6": {
+                  "cash": 12000,
+                  "bankBonus": 555,
+                  "overdraft": 888,
+                  "taxPercent": 27
+                }
+              },
+              "numbers": {
+                "rules.houseCash": 322,
+                "rules.rentHouse": 133,
+                "rules.shopStarCash": 123,
+                "rules.stepMilliseconds": 1400
+              },
+              "properties": {
+                "1": {
+                  "cash": 37,
+                  "diamonds": 0
+                }
+              }
+            },
+            "draft": {
+              "characters": {
+                "b6": {
+                  "cash": 12000,
+                  "bankBonus": 555,
+                  "overdraft": 888,
+                  "taxPercent": 27
+                }
+              },
+              "numbers": {
+                "rules.houseCash": 777,
+                "rules.rentHouse": 133,
+                "rules.shopStarCash": 123,
+                "rules.stepMilliseconds": 1400
+              },
+              "properties": {
+                "1": {
+                  "cash": 37,
+                  "diamonds": 0
+                },
+                "6": {
+                  "cash": 73,
+                  "diamonds": 0
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "queueing leaves popup scene, clock, positions and turn intact",
+          "pass": true,
+          "detail": {
+            "queuedBefore": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 24600,
+              "positions": [
+                [
+                  551,
+                  51
+                ],
+                [
+                  304,
+                  1
+                ]
+              ],
+              "turn": [
+                1,
+                0,
+                "1P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                12170.09,
+                5867
+              ],
+              "diamonds": [
+                3,
+                0
+              ]
+            },
+            "duringQueue": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 24600,
+              "positions": [
+                [
+                  551,
+                  51
+                ],
+                [
+                  304,
+                  1
+                ]
+              ],
+              "turn": [
+                1,
+                0,
+                "1P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                12170.09,
+                5867
+              ],
+              "diamonds": [
+                3,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "name": "current purchase settles with old 300 cash / 1 diamond before queued rules apply",
+          "pass": true,
+          "detail": {
+            "queuedCash": 12170.09,
+            "queuedBefore": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 24600,
+              "positions": [
+                [
+                  551,
+                  51
+                ],
+                [
+                  304,
+                  1
+                ]
+              ],
+              "turn": [
+                1,
+                0,
+                "1P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                12170.09,
+                5867
+              ],
+              "diamonds": [
+                3,
+                0
+              ]
+            },
+            "settled": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 26400,
+              "positions": [
+                [
+                  551,
+                  51
+                ],
+                [
+                  304,
+                  1
+                ]
+              ],
+              "turn": [
+                2,
+                2,
+                "2P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                11870.09,
+                5867
+              ],
+              "diamonds": [
+                2,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "name": "safe-point promotion atomically aligns active, board prices, global rule and UI status",
+          "pass": true,
+          "detail": {
+            "live": {
+              "pending": false,
+              "reason": "",
+              "lastResult": {
+                "status": "applied",
+                "pending": false,
+                "applied": true,
+                "deferred": false,
+                "reason": "已应用到当前游戏；未重开 / Applied to the current game without restarting",
+                "reasons": [],
+                "config": {
+                  "characters": {
+                    "b6": {
+                      "cash": 12000,
+                      "bankBonus": 555,
+                      "overdraft": 888,
+                      "taxPercent": 27
+                    }
+                  },
+                  "numbers": {
+                    "rules.houseCash": 777,
+                    "rules.rentHouse": 133,
+                    "rules.shopStarCash": 123,
+                    "rules.stepMilliseconds": 1400
+                  },
+                  "properties": {
+                    "1": {
+                      "cash": 37,
+                      "diamonds": 0
+                    },
+                    "6": {
+                      "cash": 73,
+                      "diamonds": 0
+                    }
+                  }
+                },
+                "changes": [
+                  {
+                    "group": "numbers",
+                    "id": "rules.houseCash",
+                    "path": [
+                      "numbers",
+                      "rules.houseCash"
+                    ],
+                    "value": 777,
+                    "oldValue": 322,
+                    "effect": "next-trigger",
+                    "reason": "后续对应购买、升级、租金或道具事件读取新规则；不追溯已结算结果 / New rules on subsequent events; settled results stay unchanged",
+                    "afterApply": "next-trigger"
+                  },
+                  {
+                    "group": "properties",
+                    "id": "6",
+                    "field": "cash",
+                    "path": [
+                      "properties",
+                      "6",
+                      "cash"
+                    ],
+                    "value": 73,
+                    "oldValue": 300,
+                    "effect": "immediate",
+                    "reason": "更新实际价格表；不改变已购土地、房屋或已支付金额 / Update price tables, not ownership, buildings or past payments",
+                    "afterApply": "immediate"
+                  },
+                  {
+                    "group": "properties",
+                    "id": "6",
+                    "field": "diamonds",
+                    "path": [
+                      "properties",
+                      "6",
+                      "diamonds"
+                    ],
+                    "value": 0,
+                    "oldValue": 1,
+                    "effect": "immediate",
+                    "reason": "更新实际价格表；不改变已购土地、房屋或已支付金额 / Update price tables, not ownership, buildings or past payments",
+                    "afterApply": "immediate"
+                  }
+                ]
+              },
+              "request": null
+            },
+            "text": "本局即时应用保留位置、回合和未修改的资源；存储仍需单独保存。",
+            "active": {
+              "characters": {
+                "b6": {
+                  "cash": 12000,
+                  "bankBonus": 555,
+                  "overdraft": 888,
+                  "taxPercent": 27
+                }
+              },
+              "numbers": {
+                "rules.houseCash": 777,
+                "rules.rentHouse": 133,
+                "rules.shopStarCash": 123,
+                "rules.stepMilliseconds": 1400
+              },
+              "properties": {
+                "1": {
+                  "cash": 37,
+                  "diamonds": 0
+                },
+                "6": {
+                  "cash": 73,
+                  "diamonds": 0
+                }
+              }
+            },
+            "draft": {
+              "characters": {
+                "b6": {
+                  "cash": 12000,
+                  "bankBonus": 555,
+                  "overdraft": 888,
+                  "taxPercent": 27
+                }
+              },
+              "numbers": {
+                "rules.houseCash": 777,
+                "rules.rentHouse": 133,
+                "rules.shopStarCash": 123,
+                "rules.stepMilliseconds": 1400
+              },
+              "properties": {
+                "1": {
+                  "cash": 37,
+                  "diamonds": 0
+                },
+                "6": {
+                  "cash": 73,
+                  "diamonds": 0
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "next actual purchase uses newly promoted 73 cash / 0 diamond rules",
+          "pass": true,
+          "detail": {
+            "nextBefore": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 26400,
+              "positions": [
+                [
+                  551,
+                  1
+                ],
+                [
+                  304,
+                  1
+                ]
+              ],
+              "turn": [
+                1,
+                1,
+                "1P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                11870.09,
+                5867
+              ],
+              "diamonds": [
+                2,
+                0
+              ]
+            },
+            "nextAfter": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 29040,
+              "positions": [
+                [
+                  551,
+                  51
+                ],
+                [
+                  304,
+                  1
+                ]
+              ],
+              "turn": [
+                2,
+                2,
+                "2P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                11797.09,
+                5867
+              ],
+              "diamonds": [
+                2,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "name": "explicit live Apply neither confirms nor rebuilds an already running board",
+          "pass": true,
+          "detail": {
+            "beforeApply": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 29040,
+              "positions": [
+                [
+                  551,
+                  51
+                ],
+                [
+                  304,
+                  1
+                ]
+              ],
+              "turn": [
+                2,
+                2,
+                "2P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                11797.09,
+                5867
+              ],
+              "diamonds": [
+                2,
+                0
+              ]
+            },
+            "afterApply": {
+              "sameGame": true,
+              "frame": 2,
+              "now": 29040,
+              "positions": [
+                [
+                  551,
+                  51
+                ],
+                [
+                  304,
+                  1
+                ]
+              ],
+              "turn": [
+                2,
+                2,
+                "2P"
+              ],
+              "owners": [
+                null,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "levels": [
+                null,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "cash": [
+                11797.09,
+                5867
+              ],
+              "diamonds": [
+                2,
+                0
+              ]
+            },
+            "dialogs": [
+              {
+                "type": "confirm",
+                "message": "按当前草稿重新开局？当前对局进度将丢失。\n仅想修改当前游戏请取消，使用“立即应用本局”。不会自动保存到本机。"
+              }
+            ]
+          }
+        },
+        {
+          "name": "manual restart is separate and still asks for confirmation",
+          "pass": true,
+          "detail": {
+            "type": "confirm",
+            "message": "按当前草稿重新开局？当前对局进度将丢失。\n仅想修改当前游戏请取消，使用“立即应用本局”。不会自动保存到本机。"
+          }
+        },
+        {
+          "name": "live-update editor retains real 0x speed control",
+          "pass": true
+        },
+        {
+          "name": "live-update editor retains real 0.1x speed control",
+          "pass": true
+        },
+        {
+          "name": "live-update editor retains real 1x speed control",
+          "pass": true
+        },
+        {
+          "name": "live-update editor retains real 20x speed control",
+          "pass": true
+        },
+        {
+          "name": "0x still freezes time and gameplay keys after live updates",
+          "pass": true
+        },
+        {
+          "name": "all automatic and explicit live applications ran without confirmation",
+          "pass": true,
+          "detail": [
+            {
+              "type": "confirm",
+              "message": "按当前草稿重新开局？当前对局进度将丢失。\n仅想修改当前游戏请取消，使用“立即应用本局”。不会自动保存到本机。"
+            }
+          ]
+        },
+        {
+          "name": "live update verification has no browser/runtime errors",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "browserErrors": [],
+      "dialogs": [
+        {
+          "type": "confirm",
+          "message": "按当前草稿重新开局？当前对局进度将丢失。\n仅想修改当前游戏请取消，使用“立即应用本局”。不会自动保存到本机。"
+        }
+      ],
+      "fixtureScope": "Real editor change/blur controls, menu and original keyboard transactions. Later controlled turn/position and public-sandbox ownership fixtures; seeded dice only. No game reconstruction during assertions; not native Flash differential/full-game proof."
+    },
+    "naturalJourneysRerun": {
+      "seeds": [
+        5976,
+        42,
+        123456
+      ],
+      "rolls": [
+        463,
+        465,
+        456
+      ],
+      "passed": 3,
+      "scope": "Original-value headless key-only policy, not Flash/runtime differential."
+    },
+    "regeneration": {
+      "pass": true,
+      "humanFilesPreserved": 12,
+      "generatedOutputsUnchanged": true
+    },
+    "privacy": "Token/path/staged-index canaries passed; CSS included in publication scan.",
+    "retainedFailureFix": "Real browser validation exposed the original shop result display remaining alive after payment; safe guards now require the hidden h=0 selector and stable turn, with both-player item cases covered."
   }
 }

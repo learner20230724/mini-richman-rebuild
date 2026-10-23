@@ -12,6 +12,7 @@ with tempfile.TemporaryDirectory(dir=ROOT/'output') as tmp:
     p.write_text(fake_token+'\n'+personal+'\n','utf-8')
     result=privacy.scan(root,[Path('example.txt')]);assert not result['pass']
     assert {x['rule'] for x in result['violations']}=={'github-token','windows-personal-path'}
+    css=root/'style.css';css.write_text('/* '+personal+' */',encoding='utf-8');assert not privacy.scan(root,[Path('style.css')])['pass']
     subprocess.run(['git','init','-q'],cwd=root,check=True)
     subprocess.run(['git','add','example.txt'],cwd=root,check=True)
     p.write_text('clean working tree\n','utf-8')

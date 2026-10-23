@@ -192,3 +192,13 @@ test('browser globals load without Node, and unavailable localStorage is caught'
   vm.runInContext('this.defaults='+JSON.stringify(defaults)+';this.store=new RichmanConfigStore(defaults);store.set("numbers","rules.houseCash",321);store.apply();',context);
   assert.equal(context.store.active.numbers['rules.houseCash'],321);assert.equal(context.store.warnings.length,1);
 });
+
+
+test('live applied-state update preserves a newer editable draft and validates atomically',()=>{
+  const s=model();s.set('characters','b6','cash',15000);
+  s.setActive({characters:{b6:{cash:12000}}});
+  assert.equal(s.current.characters.b6.cash,15000);assert.equal(s.active.characters.b6.cash,12000);
+  assert.equal(s.stats().draftChanged,1);const before=s.active;
+  assert.throws(()=>s.setActive({characters:{b6:{cash:-1}}}));
+  assert.deepEqual(s.active,before);assert.equal(s.current.characters.b6.cash,15000);
+});

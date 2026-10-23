@@ -1,9 +1,52 @@
 # Delivery status / 交付状态
 
-Updated 2026-10-23, Asia/Shanghai. **v0.2.0 customization update; not a claim of
+Updated 2026-10-23, Asia/Shanghai. **v0.3.0 live-customization update; not a claim of
 native-Flash or full-pixel equivalence.** [Verification summary](VERIFICATION.json)
 
-## v0.2.0 scope / 本轮更新范围
+## v0.3.0 scope / 本轮更新范围
+
+- Valid field changes apply to the current game by default on blur/Enter.
+  The primary action is "立即应用本局" (apply now), not restart. Explicit saving
+  remains separate; automatic application is not automatic persistence.
+- Only changed character fields synchronize to currently selected matching
+  players. Other player balances, positions and match progress are not reset.
+  Future character selections use the updated starting configuration.
+- Updated prices and business rules govern later actions. Busy transactions queue
+  the whole update for a safe point; already-paid costs/rent are not recalculated.
+- Named timer changes preserve interval progress instead of restarting the match.
+  Advanced source-number changes remain risk-limited and do not forcibly replay
+  scenes or reconstruct arbitrary current display state.
+- Confirmed restart remains available as a separate secondary action. Presets,
+  JSON files and local browser storage still save rules rather than match state.
+- Preset loading, JSON import, undo and resets create a protected bulk draft.
+  They require explicit application even when field auto-apply is enabled.
+- The six-page editor, current-match sandbox, and 0–20× target speed are retained.
+
+## v0.3.0 validation / 本轮验收
+
+- 278 unit tests passed, including live-state/resource preservation, proportional
+  timers, transactional queues, and all supported shop settlement cases.
+- 66 retained browser checks and 32 new live-update checks passed in Edge.
+  Real current-game purchases, construction, rent, bank rewards and shop payments
+  used changed values without replacing the game, moving players or resetting cash.
+- A moving 700→1400 ms interval retained its remaining fraction, position, dice
+  and turn. Queued 300/1 purchases settled under old rules, then 73/0 applied to
+  the next actual purchase. Explicit restart remained a separate confirmation.
+- Original-default journeys again finished in 463/465/456 rolls. Regeneration
+  preserved 12 handwritten files and all generated outputs. Privacy canaries
+  passed; CSS is now included in privacy scanning.
+- Browser validation found and fixed an original shop-result-display edge case:
+  a completed hidden h=0 selector no longer blocks later live edits forever.
+
+下面 v0.2.0 与 v0.1.1 的数据为历史记录，不用于代替本轮验收。
+
+The v0.2.0/v0.1.1 records below are historical. Standalone v0.3.0 package validation
+is recorded separately before publication.
+
+See [the customization guide](CUSTOMIZATION.md) for exact application, queue,
+persistence and advanced-setting limits.
+
+## Historical v0.2.0 scope / v0.2.0 历史更新范围
 
 - Six-page visual editor, opened with the gear/F2, in separate responsive space.
   Opening pauses by default; continuing leaves the panel open. Editor input is
@@ -23,7 +66,7 @@ native-Flash or full-pixel equivalence.** [Verification summary](VERIFICATION.js
 See [the customization guide](CUSTOMIZATION.md) for apply/save distinctions,
 scope and safety limits.
 
-## v0.2.0 source verification / 本轮源码验证
+## Historical v0.2.0 verification / v0.2.0 历史验收
 
 - 228 unit tests passed (143 original + 85 clock/configuration/sandbox and pacing tests).
 - The same three original-default headless journeys passed again: 463/465/456 rolls.
@@ -41,7 +84,7 @@ scope and safety limits.
 - 0.1×/1×/20× produced identical seeded game snapshots, RNG state and diagnostics
   after equal simulation time. A focus regression found during review was fixed:
   mouse-closing settings or resuming from the compact control restores game keys.
-- Current storage is approximately 10 MB of tracked source, including 1.8 MB of
+- At v0.2.0, storage was approximately 10 MB of tracked source, including 1.8 MB of
   runtime editable assets; the ZIP is approximately 3.1 MB / 5.5 MB extracted.
   These decimal sizes are not additive. Older counts below are historical.
 

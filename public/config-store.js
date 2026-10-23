@@ -87,6 +87,7 @@
     }
     replace(value){this._current=this._validate(value);return this.current;}
     apply(){this._active=this.current;return this.active;}
+    setActive(value){const next=this._validate(value);this._active=next;return this.active;}
     resetDraftToFile(){this._current=this.fileBase;return this.current;}
     resetAll(){this._current={};return this.current;}
     resetBrowser(){

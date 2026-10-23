@@ -9,7 +9,7 @@ RULES={
     'private-key':re.compile(r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'),
     'authorization-value':re.compile(r'(?i)authorization[\"\s:=]+(?:bearer|token)\s+[A-Za-z0-9_.-]{20,}'),
 }
-EXTENSIONS={'.js','.cjs','.py','.ps1','.cmd','.html','.json','.md','.xml','.svg','.txt','.yml','.yaml','.toml','.as','.png','.ttf',''}
+EXTENSIONS={'.js','.cjs','.css','.py','.ps1','.cmd','.html','.json','.md','.xml','.svg','.txt','.yml','.yaml','.toml','.as','.png','.ttf',''}
 def index_bytes(root,paths):
     entries=subprocess.check_output(['git','ls-files','--stage','-z'],cwd=root)
     objects={}

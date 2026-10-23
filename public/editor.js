@@ -3,9 +3,9 @@
 
   const TABS = [['sandbox', '本局沙盒'], ['characters', '角色'], ['properties', '地产'], ['building', '建造租金'], ['shop', '商店道具'], ['advanced', '时间 / 高级']];
   const CHARACTER_FIELDS = [
-    ['name', '角色名称', '文字'], ['cash', '初始现金', '元'], ['overdraft', '透支额度', '元'],
+    ['name', '角色名称', '文字'], ['cash', '现金', '元'], ['overdraft', '透支额度', '元'],
     ['bankBonus', '经过银行奖励', '元 / 次'], ['taxPercent', '收租税率', '%'],
-    ['diamonds', '初始钻石', '颗'], ['stars', '初始星星', '颗'], ['charms', '初始护符', '个'], ['mines', '初始地雷', '个']
+    ['diamonds', '钻石', '颗'], ['stars', '星星', '颗'], ['charms', '护符', '个'], ['mines', '地雷', '个']
   ];
   const RULE_FIELDS = {
     building: [['rules.houseCash', '建造平房费用', '元'], ['rules.upgradeStars', '每次升级消耗', '颗星'], ['rules.rentHouse', '平房租金', '元 / 次'], ['rules.rentTower', '高楼租金', '元 / 次']],
@@ -47,6 +47,11 @@
       this.cleanups = [];
       this.selectedPreset = '';
       this.disposed = false;
+      this.autoFieldPending = false;
+      this.manualApplyRequired = false;
+      this.manualApplyReason = '已载入批量草稿';
+      this.liveApplying = false;
+      this.lastLiveResult = null;
       this.build();
       this.on(this.win, 'keydown', event => {
         if (event.key === 'F2') { event.preventDefault(); event.stopImmediatePropagation(); this.toggle(); }
@@ -71,6 +76,7 @@
     button(text, callback, className = '') {
       const button = this.node('button', 'rm-editor-button ' + className, text);
       button.type = 'button';
+      if (/^(撤销|草稿恢复|原版$|导入 JSON$)/.test(text)) button.dataset.draftOnly = 'true';
       button.addEventListener('click', () => this.action(callback));
       return button;
     }
@@ -90,6 +96,7 @@
     note(text, className = '') { return this.node('p', 'rm-editor-note ' + className, text); }
     notice(text, error = false) {
       this.message.textContent = text || '';
+      delete this.message.dataset.liveFeedback;
       this.message.classList.toggle('rm-editor-error', error);
       this.message.setAttribute('role', error ? 'alert' : 'status');
     }
@@ -107,8 +114,54 @@
     remember() { this.undo.push(clone(this.store.current)); if (this.undo.length > 30) this.undo.shift(); }
     isDirty() { return !!this.invalid.size || !!this.store.stats().draftChanged; }
     confirmReplace(message) { return !this.isDirty() || this.win.confirm(message + '\n当前草稿会被替换；不会自动应用或保存。'); }
+    stageBulkDraft(reason = '已载入批量草稿') { this.manualApplyRequired = true; this.manualApplyReason = reason; this.autoFieldPending = false; }
     replace(next, message) {
-      this.remember(); this.store.replace(next); this.invalid.clear(); this.render(); this.refreshState(); this.notice(message);
+      this.remember(); this.store.replace(next); this.invalid.clear(); this.stageBulkDraft('已撤销或恢复配置草稿'); this.render(); this.refreshState(); this.notice(message);
+    }
+    refreshFields() { for (const row of this.content.querySelectorAll('.rm-editor-field')) row.richmanRefreshState?.(); }
+    async applyCurrentLive(automatic = false) {
+      this.checkValid();
+      if (automatic && (!this.autoApplyCheck.checked || this.manualApplyRequired || !this.autoFieldPending)) return;
+      if (this.liveApplying) { if (!automatic) throw new Error('正在提交本局配置，请稍候。'); return; }
+      if (typeof this.adapter.applyLive !== 'function') throw new Error('当前运行适配层不支持本局即时应用。');
+      this.liveApplying = true; this.refreshState();
+      try {
+        const config = clone(this.store.current);
+        const result = await this.adapter.applyLive(config);
+        this.lastLiveResult = result || {};
+        this.autoFieldPending = false;
+        this.manualApplyRequired = false;
+        this.refreshFields();
+        const pending = !!this.lastLiveResult.pending;
+        const reason = this.lastLiveResult.reason ? '：' + this.lastLiveResult.reason : '';
+        this.notice(pending ? '配置已提交，正在等待安全点' + reason + '。不会重新开局或自动保存。' : this.lastLiveResult.deferred ? '本局可更新的配置已应用；部分源脚本参数只在后续读取或新局生效。未自动保存。' : (automatic ? '已自动应用本局' : '已立即应用本局') + '；保留当前进度，未自动保存。');
+        this.message.dataset.liveFeedback = 'true';
+      } finally { this.liveApplying = false; this.refreshState(); }
+    }
+    commitAutoField() {
+      if (this.suppressAutoCommit) return;
+      if (!this.autoFieldPending || !this.autoApplyCheck.checked || this.manualApplyRequired) return;
+      if (this.invalid.size) { this.notice('仍有无效输入，已保留草稿，未自动提交本局。', true); return; }
+      return this.applyCurrentLive(true);
+    }
+    refreshLiveStatus(status) {
+      if (!this.liveStatus || !this.autoHint) return;
+      const live = status && status.liveSettings || this.lastLiveResult || {};
+      const pending = !!live.pending;
+      if (this.lastDisplayedPending && !pending && this.message?.dataset.liveFeedback === 'true') {
+        this.notice(live.deferred || live.lastResult?.deferred ? '排队配置已在安全点应用；仍有源参数仅在后续读取或新局生效。未自动保存。' : '排队配置已在安全点应用；对局进度保留，未自动保存。');
+        this.message.dataset.liveFeedback = 'true';
+      }
+      this.lastDisplayedPending = pending;
+      let text;
+      if (this.liveApplying) text = '正在提交本局配置…';
+      else if (pending) text = '等待安全点，本次配置尚未生效：' + (live.reason || '当前操作需要先结束。') + ' 关闭设置，或取消“编辑时暂停”继续完成移动 / 弹窗，安全后自动生效。';
+      else if (live.deferred || live.lastResult?.deferred) text = '本局配置已更新；部分源数字仅在后续读取或重新开局生效。';
+      else text = '本局即时应用保留位置、回合和未修改的资源；存储仍需单独保存。';
+      this.liveStatus.textContent = text; this.liveStatus.dataset.pending = String(pending); this.liveStatus.classList.toggle('rm-editor-pending', pending);
+      if (this.cancelPendingButton) { this.cancelPendingButton.hidden = !pending; this.cancelPendingButton.disabled = typeof this.adapter.cancelPending !== 'function'; }
+      this.autoHint.textContent = this.manualApplyRequired ? this.manualApplyReason + '，点“立即应用本局”生效。即使再改小字段或关闭设置，也不会自动提交这份待确认草稿。' : this.autoApplyCheck.checked ? '合法字段在失焦或 Enter 确认后自动提交本局；输入过程不提交，也不会自动保存。' : '自动应用已关闭：修改仅保留为草稿，请点“立即应用本局”。';
+      this.autoHint.classList.toggle('rm-editor-pending', this.manualApplyRequired);
     }
     effective(config, group, id, field) {
       if (group === 'numbers') return config.numbers && Object.hasOwn(config.numbers, id) ? config.numbers[id] : this.defaults.numbers[id];
@@ -133,6 +186,14 @@
       for (const type of ['keydown', 'keyup', 'keypress']) this.on(this.panel, type, event => {
         if (event.key !== 'F2' && event.key !== 'Escape') event.stopPropagation();
       });
+      // A click on a draft-only action must not first blur-commit the field the
+      // user is about to undo, replace or import over.
+      this.on(this.panel, 'pointerdown', event => {
+        if (event.target.closest?.('[data-draft-only],select[aria-label="命名预设"]')) {
+          this.suppressAutoCommit = true;
+          this.win.setTimeout(() => { this.suppressAutoCommit = false; }, 0);
+        }
+      }, true);
       const speed = this.node('section', 'rm-editor-speed'); speed.setAttribute('aria-label', '游戏速度');
       this.playbackStatus = this.node('strong', 'rm-editor-playback-status'); speed.appendChild(this.playbackStatus);
       const speedInputs = this.node('div', 'rm-editor-speed-inputs');
@@ -151,6 +212,10 @@
       this.pauseCheck = this.node('input'); this.pauseCheck.type = 'checkbox'; this.pauseCheck.checked = true; this.pauseCheck.dataset.pauseEditor = 'true';
       this.pauseCheck.addEventListener('change', () => this.action(() => { this.adapter.pauseEditor(this.opened && this.pauseCheck.checked); this.refreshPlayback(); }));
       const pauseLabel = this.label('编辑时暂停（独立于倍速；关闭设置后解除）', this.pauseCheck); pauseLabel.classList.add('rm-editor-checkbox'); speed.appendChild(pauseLabel);
+      this.autoApplyCheck = this.node('input'); this.autoApplyCheck.type = 'checkbox'; this.autoApplyCheck.checked = true; this.autoApplyCheck.dataset.autoApply = 'true';
+      this.autoApplyCheck.addEventListener('change', () => { this.refreshState(); });
+      const autoLabel = this.label('修改后自动应用本局（不自动保存）', this.autoApplyCheck); autoLabel.classList.add('rm-editor-checkbox'); speed.appendChild(autoLabel);
+      this.autoHint = this.note('', 'rm-editor-auto-hint'); this.autoHint.dataset.autoApplyHint = 'true'; speed.appendChild(this.autoHint);
       this.panel.appendChild(speed);
       this.buildPresets();
       this.nav = this.node('nav', 'rm-editor-tabs'); this.nav.setAttribute('role', 'tablist'); this.nav.setAttribute('aria-label', '配置分类');
@@ -172,20 +237,27 @@
       this.message = this.node('p', 'rm-editor-message'); this.message.setAttribute('aria-live', 'polite'); this.message.setAttribute('role', 'status'); this.panel.appendChild(this.message);
       const footer = this.node('footer', 'rm-editor-footer');
       this.stateLabel = this.node('p', 'rm-editor-state'); this.stateLabel.dataset.configState = 'true'; footer.appendChild(this.stateLabel);
+      this.liveStatus = this.node('p', 'rm-editor-live-status'); this.liveStatus.dataset.liveStatus = 'true'; this.liveStatus.setAttribute('aria-live', 'polite'); footer.appendChild(this.liveStatus);
+      this.cancelPendingButton = this.button('取消待应用', async () => {
+        if (typeof this.adapter.cancelPending !== 'function') throw new Error('当前适配层不支持取消待应用。');
+        await this.adapter.cancelPending(); this.lastDisplayedPending = false; this.lastLiveResult = null; this.stageBulkDraft('已取消本次待应用配置'); this.refreshState(); this.notice('已取消待应用；本局保持原样，草稿仍保留。需要应用时请再次点击“立即应用本局”。');
+      }, 'rm-editor-small'); this.cancelPendingButton.dataset.cancelPending = 'true'; this.cancelPendingButton.hidden = true; footer.appendChild(this.cancelPendingButton);
       const applyRow = this.node('div', 'rm-editor-inline');
-      this.applyButton = this.button('应用并重新开局', async () => {
+      this.applyButton = this.button('立即应用本局', () => this.applyCurrentLive(false), 'rm-editor-primary'); this.applyButton.dataset.applyConfig = 'true';
+      this.restartButton = this.button('按配置重新开局', async () => {
         this.checkValid();
-        if (!this.win.confirm('应用当前草稿并重新开局？当前对局进度将丢失；不会自动保存到本机。')) return;
-        await this.adapter.apply(clone(this.store.current)); this.refreshState(); this.render(); this.notice('已按草稿重新开局。需要下次启动继续使用时，请单独点击“保存已应用到本机”。');
-      }, 'rm-editor-primary'); this.applyButton.dataset.applyConfig = 'true';
+        if (!this.win.confirm('按当前草稿重新开局？当前对局进度将丢失。\n仅想修改当前游戏请取消，使用“立即应用本局”。不会自动保存到本机。')) return;
+        await this.adapter.apply(clone(this.store.current)); this.autoFieldPending = false; this.manualApplyRequired = false; this.lastLiveResult = null; this.refreshState(); this.render(); this.notice('已按草稿重新开局。需要下次启动继续使用时，请单独点击“保存已应用到本机”。');
+      }); this.restartButton.dataset.restartConfig = 'true';
       this.saveButton = this.button('保存已应用到本机', () => {
         const saved = this.store.saveActive(); this.refreshState();
         this.notice(saved === false || this.store.lastSaveSucceeded === false ? '无法保存到本机：当前规则只保留在本页面内存。请导出 JSON 备份；尚未应用的草稿也未保存。' : '已保存当前已应用规则。尚未应用的草稿不在本次保存内。', saved === false || this.store.lastSaveSucceeded === false);
       }); this.saveButton.dataset.saveActive = 'true';
       applyRow.append(this.applyButton, this.saveButton); footer.appendChild(applyRow);
       const tools = this.node('div', 'rm-editor-inline');
-      this.undoButton = this.button('撤销一项', () => { if (!this.undo.length) return; this.store.replace(this.undo.pop()); this.invalid.clear(); this.render(); this.refreshState(); this.notice('已撤销一项草稿修改，未改变本局。'); });
+      this.undoButton = this.button('撤销一项', () => { if (!this.undo.length) return; this.store.replace(this.undo.pop()); this.invalid.clear(); this.stageBulkDraft('已撤销草稿修改'); this.render(); this.refreshState(); this.notice('已撤销一项草稿修改，未改变本局；点击“立即应用本局”才提交。'); });
       tools.append(this.undoButton, this.button('撤销到已应用', () => { if (this.confirmReplace('撤销草稿到本局已应用的规则？')) this.replace(this.store.active, '草稿已回到已应用规则。'); }));
+      tools.appendChild(this.restartButton);
       const reset = this.node('details', 'rm-editor-reset'); reset.appendChild(this.node('summary', '', '恢复 / 清除设置'));
       const resetTools = this.node('div', 'rm-editor-inline');
       resetTools.append(
@@ -207,8 +279,8 @@
       this.presetSelect = this.select([['', '选择命名预设']], '', '命名预设', name => {
         if (!name) { this.selectedPreset = ''; this.presetName.value = ''; return; }
         if (!this.confirmReplace('加载命名预设“' + name + '”？')) { this.presetSelect.value = this.selectedPreset; return; }
-        this.remember(); this.store.loadPreset(name); this.invalid.clear(); this.selectedPreset = name; this.presetName.value = name;
-        this.render(); this.refreshState(); this.notice('已载入预设到草稿；尚未应用或保存为启动规则。');
+        this.remember(); this.store.loadPreset(name); this.invalid.clear(); this.stageBulkDraft(); this.selectedPreset = name; this.presetName.value = name;
+        this.render(); this.refreshState(); this.notice('已载入预设到批量草稿；点击“立即应用本局”生效，未自动应用或保存启动规则。');
       });
       this.presetName = this.node('input'); this.presetName.type = 'text'; this.presetName.maxLength = 48; this.presetName.placeholder = '给这套规则命名（1–48 字符）'; this.presetName.setAttribute('aria-label', '预设名称');
       details.append(this.label('已保存预设', this.presetSelect), this.label('预设名称', this.presetName));
@@ -225,7 +297,7 @@
           const text = await file.text();
           if (!this.confirmReplace('导入 JSON 到草稿？')) return;
           const before = clone(this.store.current); this.store.importJSON(text); this.undo.push(before); if (this.undo.length > 30) this.undo.shift();
-          this.invalid.clear(); this.selectedPreset = ''; this.render(); this.refreshPresets(); this.refreshState(); this.notice('JSON 已校验并载入草稿；尚未应用或保存。');
+          this.invalid.clear(); this.stageBulkDraft(); this.selectedPreset = ''; this.render(); this.refreshPresets(); this.refreshState(); this.notice('JSON 已校验并载入批量草稿；点击“立即应用本局”生效，未自动应用或保存。');
         } finally { this.importInput.value = ''; }
       }));
       buttons.append(this.button('导入 JSON', () => this.importInput.click()), this.button('导出草稿 JSON', () => {
@@ -242,12 +314,14 @@
       }
       this.presetSelect.value = this.selectedPreset;
     }
-    refreshState() {
+    refreshState(status = this.adapter.getStatus ? this.adapter.getStatus() : {}) {
       const stats = this.store.stats();
-      this.stateLabel.textContent = (stats.draftChanged || this.invalid.size ? '● 草稿未应用' : '✓ 草稿与本局一致') + ' · ' + (stats.unsavedChanges ? '本局规则未保存到本机' : '本局规则与本机保存一致') + ' · 偏离原版 ' + stats.changed + ' 项' + (this.invalid.size ? ' · 无效输入 ' + this.invalid.size + ' 项' : '');
+      this.stateLabel.textContent = (status.liveSettings?.pending ? '◷ 配置已提交，等待安全点' : stats.draftChanged || this.invalid.size ? '● 草稿未应用' : '✓ 草稿与已应用配置一致') + ' · ' + (stats.unsavedChanges ? '已应用规则未保存到本机' : '已应用规则与本机保存一致') + ' · 偏离原版 ' + stats.changed + ' 项' + (this.invalid.size ? ' · 无效输入 ' + this.invalid.size + ' 项' : '');
       this.stateLabel.dataset.dirty = String(!!(stats.draftChanged || this.invalid.size));
       this.undoButton.disabled = !this.undo.length;
-      this.applyButton.disabled = !!this.invalid.size;
+      this.applyButton.disabled = !!this.invalid.size || this.liveApplying;
+      this.restartButton.disabled = !!this.invalid.size || this.liveApplying;
+      this.refreshLiveStatus(status);
     }
     setSpeed(speed) {
       if (!Number.isFinite(speed) || speed < 0 || speed > 20) throw new Error('速度必须在 0 到 20 倍之间。');
@@ -267,6 +341,7 @@
       this.speedRange.value = String(speed);
       this.stepButton.disabled = !(editorPaused || speed === 0 || status.paused);
       this.panel.dataset.userSpeed = String(speed);
+      this.refreshState(status); this.refreshFields();
     }
     open() {
       if (this.opened) return;
@@ -276,8 +351,9 @@
       this.adapter.pauseEditor(this.pauseCheck.checked); this.refreshPlayback(); this.render(); this.panel.focus();
       this.win.dispatchEvent(new this.win.Event('resize'));
     }
-    close() {
+    close(commitPending = true) {
       if (!this.opened) return;
+      if (commitPending) this.action(() => this.commitAutoField());
       this.opened = false; this.overlay.hidden = true; this.entry.hidden = false;
       this.doc.body.classList.remove('richman-editor-open'); this.gear.setAttribute('aria-expanded', 'false');
       this.adapter.pauseEditor(false); this.refreshPlayback();
@@ -294,7 +370,7 @@
       else if (this.activeTab === 'properties') this.renderProperties();
       else if (this.activeTab === 'advanced') this.renderAdvanced();
       else {
-        this.content.appendChild(this.note(this.activeTab === 'building' ? '配置在“应用并重新开局”后生效。别墅仍使用原版轮盘；租金收入扣角色税率，不额外取整。' : '满额兑换需在商店确认触发，不是拿到第 N 个物品时自动卖出。配置仅在重新开局后生效。'));
+        this.content.appendChild(this.note(this.activeTab === 'building' ? '本局应用后，下次建造、升级或收租使用新规则；当前交易弹窗未结束时先排队，不改已结算交易。别墅仍用原版轮盘，租金扣角色税率且不额外取整。' : '本局应用后，下次购买 / 满额兑换使用新规则；当前商店或事件弹窗结束后安全应用，不改已完成交易。满额兑换仍需商店确认触发。'));
         for (const [key, label, unit] of RULE_FIELDS[this.activeTab]) this.field(this.content, 'numbers', key, undefined, label, unit);
       }
       this.refreshState();
@@ -313,10 +389,12 @@
       const meta = this.node('small', 'rm-editor-field-meta');
       const updateMeta = () => {
         const applied = this.effective(this.store.active, group, id, field), value = this.store.get(group, id, field);
-        meta.textContent = '原版 ' + valueText(original) + ' · 本局 ' + valueText(applied) + ' · 草稿 ' + (this.invalid.has(key) ? '输入无效' : valueText(value)) + (rule ? ' · 范围 '+(rule.type==='string'?'1–24字':rule.min+'～'+rule.max+(rule.integer?' 整数':'')) : '') + ' · 应用后新局生效';
+        meta.textContent = '原版 ' + valueText(original) + ' · 已应用配置 ' + valueText(applied) + ' · 草稿 ' + (this.invalid.has(key) ? '输入无效' : valueText(value)) + (rule ? ' · 范围 '+(rule.type==='string'?'1–24字':rule.min+'～'+rule.max+(rule.integer?' 整数':'')) : '') + ' · ' + this.fieldEffect(group, id);
         row.classList.toggle('rm-editor-changed', this.invalid.has(key) || value !== applied);
       };
+      row.richmanRefreshState = updateMeta;
       input.addEventListener('input', () => {
+        this.autoFieldPending = true;
         try {
           const value = typeof original === 'number' ? numberValue(input.value) : input.value;
           const before = clone(this.store.current);
@@ -326,14 +404,29 @@
         } catch (error) { const message = label + '：' + String(error.message || error); this.invalid.set(key, {value: input.value, message}); input.setAttribute('aria-invalid', 'true'); input.title = message; this.notice(message, true); }
         updateMeta(); this.refreshState();
       });
+      input.addEventListener('change', () => this.action(() => this.commitAutoField()));
+      input.addEventListener('keydown', event => {
+        if (event.key === 'Enter' && !event.isComposing) { event.preventDefault(); this.action(() => this.commitAutoField()); }
+      });
       const originalButton = this.button('原版', () => {
-        this.remember(); this.store.remove(group, id, field); this.invalid.delete(key); input.value = valueText(this.store.get(group, id, field)); input.removeAttribute('aria-invalid'); input.title = ''; updateMeta(); this.refreshState();
+        this.remember(); this.store.remove(group, id, field); this.invalid.delete(key); this.stageBulkDraft('此字段已恢复原版草稿'); input.value = valueText(this.store.get(group, id, field)); input.removeAttribute('aria-invalid'); input.title = ''; updateMeta(); this.refreshState(); this.notice('此字段已恢复原版草稿；点击“立即应用本局”生效。');
       }, 'rm-editor-small'); originalButton.title = '仅此字段草稿恢复原版；未改变本局';
       row.append(heading, input, originalButton, meta); updateMeta(); parent.appendChild(row);
     }
+    fieldEffect(group, id) {
+      if (group === 'characters') return '已选用此角色：安全点只设置已改字段；未选用：下次选用生效';
+      if (group === 'properties') return '购地价格在安全点更新；交易弹窗关闭后应用，不追溯已支付价格';
+      if (id.startsWith('src.s40.')) return '棋盘初始化源值：已经执行的初始化不回写，本局对应字段需新局';
+      if (id.startsWith('src.')) return '安全点替换后续源值读取；不重跑初始化，不回写已建对象';
+      if (id === 'rules.diceFaces') return '下次掷骰生效；当前点数和剩余步数保持不变';
+      if (id === 'rules.stepMilliseconds') return '保持已走步数，活动移动计时按剩余比例换算';
+      if (/Milliseconds$/.test(id)) return '相关活动计时按剩余比例换算；保留已发生事件';
+      if (id === 'rules.selectionTicks') return '选角中按剩余比例换算次数；棋盘中用于下次选角，不重开场景';
+      return '下次相关费用 / 租金 / 物品计算生效；当前交易弹窗结束后应用';
+    }
     renderCharacters() {
       const selector = this.select(Object.entries(this.defaults.characters).map(([id, character]) => [id, id + ' · ' + character.name]), this.selection.characters, '选择角色', id => { this.selection.characters = id; this.render(); });
-      this.content.append(this.label('编辑角色', selector), this.note('选择任一角色编辑开局属性。下方同时显示原版、本局已应用和当前草稿；未应用不会改变游戏。'));
+      this.content.append(this.label('编辑角色', selector), this.note('当前选中角色的已修改字段会直接设置到使用该角色的玩家；其他资源、位置和回合不变。现金修改是“设为此值”，不是增加差额。未上场角色保留为下次选用规则；弹窗或移动时等待安全点。'));
       for (const [key, label, unit] of CHARACTER_FIELDS) this.field(this.content, 'characters', this.selection.characters, key, label, unit);
     }
     renderProperties() {
@@ -341,11 +434,11 @@
       this.content.append(this.label('地产编号', this.select(ids.map(id => [id, '地产 ' + id]), this.selection.properties, '选择地产', id => { this.selection.properties = id; this.render(); })), this.note('共 30 块可购地产。原版买地会取得整组所有权，但按停留地块的价格支付一次；这里只改该编号价格，不会默默改整组。'));
       this.field(this.content, 'properties', this.selection.properties, 'cash', '购地现金', '元 / 次');
       this.field(this.content, 'properties', this.selection.properties, 'diamonds', '购地钻石', '颗 / 次');
-      this.content.appendChild(this.note('当前地图的钻石图标保留原画；实际价格以购地确认提示为准。修改所有权和建筑等级请使用“本局沙盒”。'));
+      this.content.appendChild(this.note('新价格可应用当前对局，交易弹窗未结束时先排队，不追溯已付费用。地图钻石图标保留原画，实际价格以购地确认提示为准。所有权和建筑等级使用“本局沙盒”。'));
     }
     renderSandbox() {
       const status = this.adapter.getStatus ? this.adapter.getStatus() : {};
-      this.content.appendChild(this.note('本局调试：不是原版功能，不会写进配置或预设。只在棋盘稳定、没有移动和弹窗时可用；应用规则重新开局会清除本局修改。', 'rm-editor-warning'));
+      this.content.appendChild(this.note('本局调试：不是原版功能，不会写进配置或预设。只在棋盘稳定、没有移动和弹窗时可用；即时应用配置不重开对局，但明确“按配置重新开局”会清除本局修改。', 'rm-editor-warning'));
       this.sandboxSummary=this.note('');this.content.appendChild(this.sandboxSummary);
       this.content.appendChild(this.button('刷新本局数值', () => this.render()));
       const players = status.players || [], selected = players.find(player => Number(player.id || player.player) === this.selection.player) || players[this.selection.player - 1] || {};
@@ -378,10 +471,10 @@
     }
     renderAdvanced() {
       this.content.appendChild(this.node('h2', '', '时间与骰子'));
-      this.content.appendChild(this.note('时间单位均为游戏时间，受顶部倍速统一控制；倍速不会改写这些规则。1× 时每逻辑帧 20ms。'));
+      this.content.appendChild(this.note('时间单位均为游戏时间，受顶部倍速统一控制；倍速不改写规则。1× 每逻辑帧 20ms。时间改动保留进度，相关活动计时按剩余比例换算；当前骰点不变，新面数用于下一掷。'));
       for (const [key, label, unit] of RULE_FIELDS.timing) this.field(this.content, 'numbers', key, undefined, label, unit);
       this.content.appendChild(this.node('h2', '', '源脚本数字（高级）'));
-      this.content.appendChild(this.note('警告：src.* 同时包含流程、布局、坐标、分支和规则常量；并非都是安全玩法参数。改动可能使游戏无法运行。建议先导出预设，优先使用其他页面。', 'rm-editor-warning'));
+      this.content.appendChild(this.note('警告：src.* 包含流程、布局、坐标、分支和规则常量，不是全部都能安全热改。应用只影响后续读取，不能追溯已执行初始化或重建现有对象；部分值需明确重新开局才可见。存在弹窗或移动时先排队。请先导出预设。', 'rm-editor-warning'));
       const enabled = this.node('input'); enabled.type = 'checkbox'; enabled.checked = this.advancedEnabled;
       enabled.addEventListener('change', () => { this.advancedEnabled = enabled.checked; this.render(); });
       const enabledLabel = this.label('我了解风险，显示源数字编辑器', enabled); enabledLabel.classList.add('rm-editor-checkbox'); this.content.appendChild(enabledLabel);
@@ -405,7 +498,7 @@
     }
     destroy() {
       if (this.disposed) return;
-      this.close(); this.disposed = true; this.win.clearInterval(this.timer);
+      this.close(false); this.disposed = true; this.win.clearInterval(this.timer);
       for (const cleanup of this.cleanups.splice(0)) cleanup();
       this.entry.remove(); this.overlay.remove();
     }

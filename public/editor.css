@@ -54,6 +54,9 @@
 .rm-editor-footer .rm-editor-button{font-size:12px}
 .rm-editor-state{font-size:11px;color:#acc9b7;margin:0 0 8px;line-height:1.6}
 .rm-editor-state[data-dirty=true]{color:#ecd591}
+.rm-editor-auto-hint{margin:5px 0 0;font-size:11px;line-height:1.5}
+.rm-editor-live-status{margin:0 0 8px;color:#bddbc9;font-size:11px;line-height:1.6;overflow-wrap:anywhere}
+.rm-editor-pending{border-left:3px solid #e1bb62;background:#4a3d1e55;color:#f1d99b!important;padding:6px 8px}
 .rm-editor-reset{padding:5px 0 0;border:0}
 .rm-editor-reset .rm-editor-inline{padding-top:7px}
 .rm-editor-advanced-results>.rm-editor-inline{justify-content:space-between;margin:8px 0;font-size:11px}

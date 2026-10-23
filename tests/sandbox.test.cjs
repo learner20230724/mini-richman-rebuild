@@ -42,6 +42,47 @@ test('sandbox requires timer events to finish, but accepts the original stale ta
   g.timers.set(999,{fn(){},ms:100,next:g.now+100});assert.equal(s.snapshot().canEdit,false);g.timers.delete(999);
   assert.equal(s.snapshot().canEdit,true);
 });
+function shop(g,p,index=0){
+  const v=g.root.vars;v.shui=p;v.xingqi=0;v.pp=p+'P';
+  g.root.attach('chaoshi','chaoshi',88,{_x:340,_y:180});
+  for(let i=0;i<index;i++)g.keyDown(p===1?68:39);
+  return g.root.named.chaoshi;
+}
+for(const p of [1,2])for(const [index,item,cost,payout]of [[0,'zuanshi',200,2000],[1,'wuxing',100,1000],[2,'yumao',200,2000],[3,'dilei',300,3000]])for(const redeem of [false,true])test(`sandbox permits settled shop ${redeem?'redemption':'purchase'} P${p}, ${item}, without replaying the transaction`,()=>{
+  const g=board(),s=new RichmanSandbox(()=>g),v=g.root.vars;v[item+p]=redeem?5:0;
+  const cash=v['xianjin'+p],panel=shop(g,p,index),selector=panel.named.kuang;
+  assert.equal(s.snapshot().canEdit,false);g.keyDown(p===1?87:38);
+  assert.equal(v['xianjin'+p],cash+(redeem?payout:-cost));assert.equal(v[item+p],redeem?0:1);
+  assert.equal(selector.vars.h,0);assert.equal(selector.visible,false);assert.equal(v.shui,3-p);assert.equal(v.xingqi,3-p);
+  assert.equal(g.root.children.get(16384+88),panel);assert.equal(s.snapshot().canEdit,true);
+  const afterCash=[v.xianjin1,v.xianjin2],afterItems=[v[item+'1'],v[item+'2']];
+  // Directly exercise retained panel handlers, without initiating a new board
+  // roll first. Neither old nor next player's confirm/cancel reopens the shop.
+  for(const code of [87,38,83,40]){g.key=code;g.run(selector.events.keyDown,selector);}
+  assert.deepEqual([v.xianjin1,v.xianjin2],afterCash);assert.deepEqual([v[item+'1'],v[item+'2']],afterItems);
+  player(s,{bankBonus:777},p);assert.equal(v['jiangjin'+p],777);assert.deepEqual([v.xianjin1,v.xianjin2],afterCash);
+});
+for(const p of [1,2])test('sandbox keeps unconfirmed, unaffordable and partly closed shop states locked P'+p,()=>{
+  const g=board(),s=new RichmanSandbox(()=>g),v=g.root.vars;v['xianjin'+p]=0;v['zuanshi'+p]=0;
+  const panel=shop(g,p),selector=panel.named.kuang;assert.equal(s.snapshot().canEdit,false);
+  g.keyDown(p===1?87:38);assert.equal(v['xianjin'+p],0);assert.equal(v['zuanshi'+p],0);assert.equal(selector.vars.h,1);assert.equal(selector.visible,true);assert.equal(s.snapshot().canEdit,false);
+  // A stable-looking turn flag must not by itself unlock a live selector.
+  v.xingqi=v.shui;assert.equal(s.snapshot().canEdit,false);selector.vars.h=0;assert.equal(s.snapshot().canEdit,false);
+  selector.vars.h=1;selector.visible=false;assert.equal(s.snapshot().canEdit,false);
+  assert.throws(()=>player(s,{cash:99},p));assert.equal(v['xianjin'+p],0);
+});
+for(const p of [1,2])test('sandbox shop cancel leaves no transaction or stale lock P'+p,()=>{
+  const g=board(),s=new RichmanSandbox(()=>g),v=g.root.vars,cash=[v.xianjin1,v.xianjin2],items=[v.zuanshi1,v.zuanshi2];
+  const panel=shop(g,p);g.keyDown(p===1?83:40);
+  assert.equal(panel.alive,false);assert.equal(g.root.children.get(16384+88).id,data.exports.tt);assert.equal(s.snapshot().canEdit,true);
+  assert.deepEqual([v.xianjin1,v.xianjin2],cash);assert.deepEqual([v.zuanshi1,v.zuanshi2],items);
+});
+test('settled shop never bypasses movement, interval or spinner guards',()=>{
+  const g=board(),s=new RichmanSandbox(()=>g),v=g.root.vars;shop(g,1);g.keyDown(87);assert.equal(s.snapshot().canEdit,true);
+  v.xingqi=0;assert.equal(s.snapshot().canEdit,false);v.xingqi=v.shui;
+  g.timers.set(999,{fn(){},ms:100,next:g.now+100});assert.equal(s.snapshot().canEdit,false);g.timers.delete(999);
+  v.keyizhuan=1;assert.equal(s.snapshot().canEdit,false);v.keyizhuan=0;assert.equal(s.snapshot().canEdit,true);
+});
 const points=[[301,1],[351,1],[401,1],[451,1],[501,1],[551,51],[551,101],[551,201],[551,251],[551,301],[551,351],[501,401],[451,401],[401,401],[351,401],[251,401],[201,401],[151,401],[101,401],[51,401],[1,351],[1,301],[1,201],[1,151],[1,101],[1,51],[51,1],[101,1],[151,1],[201,1]];
 for(let id=1;id<=30;id++)test('sandbox property '+id+' synchronizes owner/building/mine display, counters, removal and isolated state',()=>{
   const g=board(),s=new RichmanSandbox(()=>g),root=g.root,v=root.vars,cash=[v.xianjin1,v.xianjin2];
