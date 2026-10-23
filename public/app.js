@@ -1,6 +1,7 @@
 (async function(){
   const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),assets=new Map();
-  let game;
+  let game,clock,editorPaused=false;
+  const warnings=[];
   const fail=error=>{const panel=document.getElementById('error');panel.style.display='block';panel.textContent='运行错误 / Runtime error\n'+error.stack;};
   try{
     await Promise.all(Object.entries(RichmanData.definitions).filter(([,d])=>d.kind==='asset').map(async([id,d])=>{
@@ -11,10 +12,33 @@
     await Promise.all(Object.entries(RichmanData.fonts).map(async([id,url])=>{
       const face=new FontFace('RichmanFont'+id,`url("${RichmanAssetData.fonts[id]||url}")`);await face.load();document.fonts.add(face);
     }));
-    game=new RichmanGame(RichmanData,RichmanScripts,{onError:fail,settings:new RichmanSettings(RichmanDefaults,RichmanOverrides),extensions:RichmanExtensions});
-    // Explicit development API, not a replacement for real-keyboard UI tests.
+    let storage;
+    try{storage=window.localStorage;}catch{warnings.push('浏览器存储不可用；本次配置仍可使用，建议导出 JSON。');}
+    const store=new RichmanConfigStore(RichmanDefaults,{fileBase:RichmanOverrides,storage,onWarning:message=>warnings.push(String(message))});
+    function createGame(config){
+      const candidate=new RichmanGame(RichmanData,RichmanScripts,{onError:fail,settings:new RichmanSettings(RichmanDefaults,config),extensions:RichmanExtensions});
+      RichmanExtensions.onReady?.(candidate);return candidate;
+    }
+    game=createGame(store.active);
+    // Explicit development APIs, not a substitute for real UI verification.
     window.richman=game;
-    RichmanExtensions.onReady?.(game);
+    clock=new RichmanClock(ms=>game.step(ms));
+    const sandbox=new RichmanSandbox(()=>game);
+    const adapter={
+      store,defaults:RichmanDefaults,getGame:()=>game,
+      getSpeed:()=>clock.speed,
+      setSpeed:value=>{clock.setSpeed(value,performance.now());return clock.speed;},
+      pauseEditor:paused=>{editorPaused=!!paused;clock.setHidden(document.hidden||editorPaused,performance.now());},
+      stepOnce:()=>{if(document.hidden)throw new Error('页面隐藏时不能单步');if(clock.speed!==0&&!editorPaused)throw new Error('请先暂停再单步');game.step(20);render();},
+      apply:config=>{
+        const candidate=createGame(config);
+        store.replace(config);store.apply();game=candidate;window.richman=game;
+        sandbox.reset?.();clock.reset(performance.now());render();return true;
+      },
+      sandbox:(action,payload)=>{const result=sandbox.run(action,payload);render();return result;},
+      getStatus:()=>({...sandbox.snapshot(),turn:game.root.vars.shui,simulationTime:game.now,speed:clock.speed,paused:clock.speed===0||editorPaused||document.hidden,editorPaused,warnings:[...warnings]})
+    };
+    window.richmanControls=adapter;
     function draw(clip){
       if(!clip.alive||!clip.visible)return;
       ctx.save();ctx.transform(...clip.matrix);ctx.globalAlpha*=clip.color[3];
@@ -48,12 +72,16 @@
       ctx.restore();
     }
     function render(){const b=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1,w=Math.round(b.width*dpr),h=Math.round(b.height*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}ctx.setTransform(w/600,0,0,h/450,0,0);ctx.globalAlpha=1;ctx.fillStyle=RichmanData.background;ctx.fillRect(0,0,600,450);draw(game.root);}
-    let last=performance.now(),remainder=0;
     function frame(now){
-      try{if(!document.hidden){remainder+=Math.min(now-last,100);while(remainder>=20){game.step(20);remainder-=20;}render();}last=now;requestAnimationFrame(frame);}catch(e){fail(e);}
+      try{clock.frame(now);if(!document.hidden)render();requestAnimationFrame(frame);}catch(e){fail(e);}
     }
+    document.addEventListener('visibilitychange',()=>clock.setHidden(document.hidden||editorPaused,performance.now()));
+    clock.setHidden(document.hidden,performance.now());
+    window.richmanEditor=new RichmanEditor(adapter);
     window.addEventListener('keydown',event=>{
       if(event.altKey&&event.key==='Enter'){event.preventDefault();if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen();return;}
+      if(event.defaultPrevented||event.target?.closest?.('input,textarea,select,button,[contenteditable=\"true\"]'))return;
+      if(clock.speed===0||editorPaused||document.hidden)return;
       const codes={a:65,d:68,w:87,s:83,ArrowLeft:37,ArrowRight:39,ArrowUp:38,ArrowDown:40,'0':48,'1':49,'2':50};
       const code=codes[event.key]??codes[event.key.toLowerCase()];if(code){event.preventDefault();if(!event.repeat)try{game.keyDown(code);render();}catch(e){fail(e);}}
     });

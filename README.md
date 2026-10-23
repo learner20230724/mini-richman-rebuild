@@ -1,21 +1,30 @@
 # Mini Richman
 
-[中文](README.zh-CN.md) · [Default parameters and rules](docs/DEFAULTS.md) · [Delivery status](docs/STATUS.md) · [Downloads](https://github.com/learner20230724/mini-richman-rebuild/releases)
+[中文](README.zh-CN.md) · [Customization guide](docs/CUSTOMIZATION.md) · [Default parameters](docs/DEFAULTS.md) · [Delivery status](docs/STATUS.md) · [Downloads](https://github.com/learner20230724/mini-richman-rebuild/releases)
 
 A local two-player board game with seven characters, whole-band property purchases, building upgrades, taxed rent, items, two casino games, fortune events, hospital stays and bankruptcy. The reconstructed game runs in a modern browser without playing a SWF or requiring Flash/Ruffle.
 
 ## Play
 
 - Extract the package and double-click `Start-Game.cmd`, or open `public/index.html`. No Node.js, Java or Flash installation is needed.
-- If your browser restricts local files, use `Start-Local-Game.cmd`. It serves the game on loopback using built-in Windows PowerShell. Close its console window to stop it.
+- If your browser restricts local files, use `Start-Local-Game.cmd`. Built-in Windows PowerShell serves `http://127.0.0.1:18758/`; close its console to stop it. If the port is occupied, close the previous game-server window before restarting.
 - Player 1: **A/D** select, **W** confirm/roll, **S** cancel.
 - Player 2: **Left/Right** select, **Up** confirm/roll, **Down** cancel.
 - The game starts about two seconds after both players confirm. **Alt+Enter** toggles fullscreen. The original aspect ratio is preserved without cropping.
-- Original interaction is keyboard-only; no new mouse-based gameplay or persistent project banners have been added.
+- The original game uses keyboard input. The optional customization panel uses mouse/keyboard; no project banners are placed around the game.
 
 ## Configure
 
-Edit **`public/config/overrides.js`**, then reload:
+Click the **gear** or press **F2** to open the six-page editor. Opening pauses the game by default; you can continue playing while the panel stays open. The panel occupies its own space rather than covering the game.
+
+- Adjust character starts, property prices, construction/rent, shop items and timing. Inspect advanced source-number keys separately.
+- Change the current match through explicitly marked **sandbox** operations, or edit a rules draft and **start a new match** to apply it. Saving a preset is not applying it.
+- Up to **30 undo steps**, **25 named presets**, and JSON import/export with a **2 MiB** size limit. Explicit local saving keeps rules, not a running match; reuse the same browser/address/port, or transfer via JSON.
+- Target speed **0–20×**, in **0.1×** steps: 0 pauses, 1 is the original speed. Single-step advances one original **20 ms** tick. Hidden pages do not accumulate catch-up time.
+
+Read [the customization guide](docs/CUSTOMIZATION.md) for apply/save/reset semantics and sandbox limits. Default gameplay values remain unchanged until you apply custom rules.
+
+For file-based configuration, edit **`public/config/overrides.js`**, then reload:
 
 ```js
 const RichmanOverrides = {
@@ -26,7 +35,7 @@ const RichmanOverrides = {
 if (typeof module !== 'undefined') module.exports = RichmanOverrides;
 ```
 
-Unspecified settings keep their original values. See the [parameter tables](docs/DEFAULTS.md) for IDs, fields and timing units. `data/number-sources.json` links advanced numeric keys to original statements and defaults; override those through `numbers` rather than editing generated JavaScript.
+Unspecified settings keep their original values. The editor never rewrites this file. See the [parameter tables](docs/DEFAULTS.md) for IDs, fields and timing units. `data/number-sources.json` links advanced numeric keys to original statements and defaults; these include coordinates/state constants, not only safe business settings. Override them through `numbers` rather than editing generated JavaScript.
 
 A purchase retains the original **whole-band ownership** rule. A per-tile price override changes eligibility and payment when purchasing from that tile, not the set of acquired properties. Regeneration never overwrites `overrides.js` or the handwritten runtime.
 
@@ -40,7 +49,11 @@ A purchase retains the original **whole-band ownership** rule. A per-tile price 
 | `public/generated-game.js` | Generated gameplay logic; do not hand-edit |
 | `public/runtime.js` | Display tree, timers, input and script-scope adapter |
 | `public/app.js` | Canvas renderer, scaling and browser input |
+| `public/clock.js` | Fixed-step 0–20× playback clock |
 | `public/settings.js` | Configuration validation/application |
+| `public/config-store.js` | Drafts, presets and explicit browser persistence |
+| `public/editor.js`, `public/editor.css` | Human-owned visual editor and layout |
+| `public/sandbox.js` | Guarded current-match development controls |
 | `public/config/overrides.js` | Human-owned configuration |
 | `public/extensions.js` | Human-owned extension hooks |
 | `tests/` | Rules, configuration and continuous-game tests |

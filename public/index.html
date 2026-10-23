@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data:; script-src 'self' file:; style-src 'self' 'unsafe-inline'; img-src 'self' file: data: blob:; font-src 'self' file: data:; connect-src 'none'; object-src 'none'; base-uri 'none'">
-<title>迷你大富翁</title><link rel="icon" href="data:,"><style>
+<title>迷你大富翁</title><link rel="stylesheet" href="editor.css"><link rel="icon" href="data:,"><style>
 *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#111}body{display:grid;place-items:center}canvas{display:block;outline:none;width:min(100vw,133.333333vh);height:min(100vh,75vw);touch-action:none}#error{position:fixed;inset:0;background:#181818;color:#fff;padding:2rem;white-space:pre-wrap;font:16px/1.5 monospace;display:none}
-</style></head><body><canvas id="game" width="600" height="450" tabindex="0" aria-label="迷你大富翁。玩家一用A、D选人，W确认，S取消；玩家二用左右方向键选择，上确认，下取消。Alt+Enter全屏。"></canvas><pre id="error" role="alert"></pre>
-<script src="game-data.js"></script><script src="asset-data.js"></script><script src="config/defaults.js"></script><script src="config/overrides.js"></script><script src="settings.js"></script><script src="generated-game.js"></script><script src="runtime.js"></script><script src="extensions.js"></script><script src="app.js"></script>
+</style></head><body><canvas id="game" width="600" height="450" tabindex="0" aria-label="迷你大富翁。玩家一用A、D选人，W确认，S取消；玩家二用左右方向键选择，上确认，下取消。Alt+Enter全屏，F2自定义配置。"></canvas><pre id="error" role="alert"></pre>
+<script src="game-data.js"></script><script src="asset-data.js"></script><script src="config/defaults.js"></script><script src="config/overrides.js"></script><script src="settings.js"></script><script src="config-store.js"></script><script src="clock.js"></script><script src="sandbox.js"></script><script src="editor.js"></script><script src="generated-game.js"></script><script src="runtime.js"></script><script src="extensions.js"></script><script src="app.js"></script>
 </body></html>

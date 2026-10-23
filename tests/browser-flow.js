@@ -7,8 +7,9 @@ async (page) => {
   const checks=[],errors=[];
   page.on('pageerror',e=>errors.push(String(e)));
   const check=(name,condition,detail)=>{checks.push({name,pass:!!condition,detail});if(!condition)throw new Error(name+': '+JSON.stringify(detail));};
+  await page.evaluate(()=>localStorage.removeItem('mini-richman.config.v1'));
   await page.reload();await page.waitForFunction(()=>!!window.richman);
-  check('game-only document',await page.locator('canvas').count()===1&&(await page.locator('body > :not(canvas):not(script):not(pre)').count())===0);
+  check('game-only document with collapsed game controls',await page.locator('canvas').count()===1&&(await page.locator('body > :not(canvas):not(script):not(pre):not(.rm-editor-entry):not(.rm-editor-overlay)').count())===0&&await page.locator('.rm-editor-overlay').isHidden());
   for(const [width,height]of [[600,450],[1280,720],[1920,1080]]){
     await page.setViewportSize({width,height});await page.waitForTimeout(100);
     const b=await page.locator('canvas').boundingBox();

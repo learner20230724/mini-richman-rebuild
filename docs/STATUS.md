@@ -1,9 +1,42 @@
 # Delivery status / 交付状态
 
-Updated 2026-10-23, Asia/Shanghai. **Runnable reconstruction v0.1.1; not a claim of
+Updated 2026-10-23, Asia/Shanghai. **v0.2.0 customization update; not a claim of
 native-Flash or full-pixel equivalence.** [Verification summary](VERIFICATION.json)
 
-## Implemented and checked / 已实现及已检查
+## v0.2.0 scope / 本轮更新范围
+
+- Six-page visual editor, opened with the gear/F2, in separate responsive space.
+  Opening pauses by default; continuing leaves the panel open. Editor input is
+  isolated from gameplay input.
+- Character, property, construction/rent, shop-item and timing rule drafts;
+  applying starts a new match rather than silently changing a paid transaction.
+- Explicit current-match player/property sandbox, with stable-board safeguards
+  and an in-memory operation log. This is not original-rule gameplay or a savegame.
+- Up to 30 draft undo steps, 25 presets, validated JSON import/export (2 MiB),
+  explicit local saving, and separate original/file-baseline draft resets.
+- Target speed 0–20× in 0.1× increments, default 1×, original 20 ms fixed steps,
+  single-step, hidden-page pause and no accumulated catch-up. A slow machine may
+  not achieve the target multiplier; changing speed does not rewrite rule values.
+- The editor's pause does not override a user's 0× choice. Paused gameplay keys
+  are blocked while editor controls remain usable.
+
+See [the customization guide](CUSTOMIZATION.md) for apply/save distinctions,
+scope and safety limits.
+
+## v0.2.0 source verification / 本轮源码验证
+
+- 227 unit tests passed (143 original + 84 new clock/configuration/sandbox tests).
+- The same three original-default headless journeys passed again: 463/465/456 rolls.
+- 18 original browser-flow + 6 extra screen checks passed. The new editor passed
+  31 browser checks; focus, advanced UI, storage-failure feedback and open-panel
+  pointer mapping passed 11 more checks. Total: 66 checks in Edge.
+- Actual UI configuration 12000 cash and 37/0 land price produced a real
+  11963-cash purchase. Only the dice was controlled in this transaction test.
+- Actual regeneration preserved 11 handwritten files and unchanged generated
+  outputs. Privacy regression checks passed. Portable validation is recorded
+  separately before release; older numbers below are historical evidence.
+
+## Historical v0.1.1 validation / v0.1.1 历史验收
 
 - 45 recovered script blocks mapped into editable JavaScript; 259 display definitions.
 - Seven characters, 30 purchase tiles, whole-band purchases, buildings, taxes, items,
@@ -31,17 +64,18 @@ native-Flash or full-pixel equivalence.** [Verification summary](VERIFICATION.js
 - Code has actually been pushed to the public repository:
   <https://github.com/learner20230724/mini-richman-rebuild>.
 
-## Standalone delivery / 独立交付
+## Historical v0.1.1 delivery / v0.1.1 历史交付
 
 - A clean public clone rebuilt without the original SWF, FFDec, Java or any
   private local inputs. All 143 unit tests passed; generated outputs were unchanged.
 - A detached candidate ZIP passed every manifest/file hash and privacy check.
   It ran using built-in Windows PowerShell with a system-only PATH, without
-  Node/Java/Flash visibility. All 22 browser checks passed against that extraction.
+  Node/Java/Flash visibility. Its recorded browser-flow checks passed against
+  that extraction.
 - The final portable ZIP is built from an exact committed Git tree and contains
   `release-manifest.json` identifying that commit and hashing all payload files.
 - Downloads: <https://github.com/learner20230724/mini-richman-rebuild/releases>.
-- Approximate storage: complete source checkout **9.8 MB**, including about
+- v0.1.1 approximate storage: complete source checkout **9.8 MB**, including about
   **1.8 MB** of runtime editable asset files; runtime ZIP about **3.0 MB**, about
   **5.3 MB** extracted. These are decimal MB and are not additive asset/source totals.
 

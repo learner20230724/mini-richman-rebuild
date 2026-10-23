@@ -1,15 +1,15 @@
-param([switch]$NoBrowser,[int]$Port=0,[string]$RootPath='')
+param([switch]$NoBrowser,[int]$Port=18758,[string]$RootPath='')
 $ErrorActionPreference='Stop'
 if (!$RootPath) { $RootPath=Join-Path $PSScriptRoot '..\public' }
 $root=[IO.Path]::GetFullPath($RootPath).TrimEnd('\')
 if (!(Test-Path -LiteralPath (Join-Path $root 'index.html') -PathType Leaf)) { throw 'Missing game index.html' }
 $listener=New-Object Net.Sockets.TcpListener([Net.IPAddress]::Loopback,$Port)
-$listener.Start()
+try { $listener.Start() } catch { throw 'Cannot bind the game port. Close an earlier game-server window, or use -Port with another fixed port. Browser-saved settings belong to each port.' }
 $boundPort=$listener.LocalEndpoint.Port
 $url="http://127.0.0.1:$boundPort/"
 Write-Output "Local: $url"
 if (!$NoBrowser) { Start-Process $url }
-$mime=@{'.html'='text/html; charset=utf-8';'.js'='text/javascript; charset=utf-8';'.json'='application/json; charset=utf-8';'.svg'='image/svg+xml';'.png'='image/png';'.ttf'='font/ttf'}
+$mime=@{'.html'='text/html; charset=utf-8';'.css'='text/css; charset=utf-8';'.js'='text/javascript; charset=utf-8';'.json'='application/json; charset=utf-8';'.svg'='image/svg+xml';'.png'='image/png';'.ttf'='font/ttf'}
 try {
   while ($true) {
     $client=$listener.AcceptTcpClient()

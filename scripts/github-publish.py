@@ -16,7 +16,7 @@ def api(token,route,method='GET',data=None,content_type='application/json'):
     request=urllib.request.Request(url,data=body,method=method,headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','Content-Type':content_type,'User-Agent':'mini-richman-publication'})
     with urllib.request.urlopen(request,timeout=120) as response:return json.load(response)
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--create-repository',action='store_true');p.add_argument('--release');p.add_argument('--commit');p.add_argument('--asset');p.add_argument('--prerelease',action='store_true');args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--create-repository',action='store_true');p.add_argument('--release');p.add_argument('--commit');p.add_argument('--asset');p.add_argument('--prerelease',action='store_true');p.add_argument('--notes-file');args=p.parse_args()
     token=credential();user=api(token,'/user')
     if user['login']!=OWNER:raise ValueError('Authenticated account does not match intended repository owner')
     if args.create_repository:
@@ -32,10 +32,15 @@ def main():
         if not args.commit or not args.asset:raise ValueError('Release requires explicit commit and asset')
         asset=(ROOT/args.asset).resolve()
         if not asset.is_relative_to(ROOT/'release') or not asset.is_file():raise ValueError('Release asset must exist under release/')
+        body='中文：解压后双击 Start-Game.cmd；受限时使用 Start-Local-Game.cmd。English: Extract and open Start-Game.cmd, or Start-Local-Game.cmd. No Node/Java/Flash installation.\n\nSource commit: '+args.commit
+        if args.notes_file:
+            notes=(ROOT/args.notes_file).resolve()
+            if not notes.is_relative_to(ROOT/'docs') or not notes.is_file():raise ValueError('Release notes must exist under docs/')
+            body=notes.read_text('utf-8')+'\n\nSource commit: '+args.commit
         try:release=api(token,f'/repos/{OWNER}/{REPO}/releases/tags/{args.release}')
         except urllib.error.HTTPError as e:
             if e.code!=404:raise
-            release=api(token,f'/repos/{OWNER}/{REPO}/releases','POST',{'tag_name':args.release,'target_commitish':args.commit,'name':'Mini Richman '+args.release,'draft':False,'prerelease':args.prerelease,'body':'中文：解压后双击 Start-Game.cmd；浏览器限制本地文件时使用 Start-Local-Game.cmd（Windows 自带 PowerShell，无需 Node/Java/Flash）。\n\nEnglish: Extract and open Start-Game.cmd. If local-file access is restricted, use Start-Local-Game.cmd (built-in Windows PowerShell; no Node/Java/Flash installation).\n\nSee the included README and STATUS for exact verification scope and source limitations.\n\nSource commit: '+args.commit})
+            release=api(token,f'/repos/{OWNER}/{REPO}/releases','POST',{'tag_name':args.release,'target_commitish':args.commit,'name':'Mini Richman '+args.release,'draft':False,'prerelease':args.prerelease,'body':body})
         existing=next((a for a in release['assets'] if a['name']==asset.name),None)
         if existing:raise ValueError('Release asset already exists; refusing to replace immutable version')
         upload=release['upload_url'].split('{',1)[0]+'?name='+urllib.parse.quote(asset.name)

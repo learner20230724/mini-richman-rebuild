@@ -27,6 +27,8 @@ with zipfile.ZipFile(archive_path) as archive:
     html=archive.read('mini-richman/public/index.html').decode('utf-8')
     for src in re.findall(r'<script src="([^"]+)"',html):
         if 'mini-richman/public/'+src not in expected:raise ValueError('Missing script dependency: '+src)
+    for href in re.findall(r'<link[^>]+href="([^"?]+\.css)"',html):
+        if 'mini-richman/public/'+href not in expected:raise ValueError('Missing stylesheet dependency: '+href)
     archive.extractall(target)
 game_root=target/'mini-richman'
 privacy=scan(game_root,[p.relative_to(game_root) for p in game_root.rglob('*') if p.is_file()])
